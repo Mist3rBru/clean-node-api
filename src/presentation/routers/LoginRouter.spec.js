@@ -50,7 +50,7 @@ const makeEmailValidatorWithError = () => {
 
 const makeAuthUseCaseWithError = () => {
   class AuthUseCaseSpy {
-   auth() { throw new Error() }
+    auth() { throw new Error() }
   }
   return new AuthUseCaseSpy
 }
@@ -121,7 +121,26 @@ describe('Login', () => {
     expect(HttpResponse.body.accessToken).toBe(authUseCaseSpy.accessToken)
   })
 
-  test('Should throw if any dependency throws', async() => {
+  test('should throw if any dependency was not provided', async() => {
+    const authUseCase = makeAuthUseCase()
+    const suts = [].concat(
+      new LoginRouter(),
+      new LoginRouter({ authUseCase })
+    )
+    for(const sut of suts) {
+      const httpRequest = {
+        body: {
+          email: 'any_email',
+          password: 'any_password'
+        }
+      }
+      const httpResponse = await sut.route(httpRequest)
+      expect(httpResponse.statusCode).toBe(500)
+      expect(httpResponse.body.error).toBe(new ServerError().message)
+    }
+  })
+
+  test('should throw if any dependency throws', async() => {
     const authUseCase = makeAuthUseCase()
     const suts = [].concat(
       new LoginRouter({
