@@ -7,11 +7,11 @@ class LoginRouter {
 }
 
 describe('Login', () => {
-	it('should return 400 when email is not provided', async () => {
+	it('should return 400 when password is not provided', async () => {
 		const sut = new LoginRouter()
 		const httpRequest = {
 			body: {
-				password: 'any-password',
+				email: 'any-email',
 			},
 		}
 
