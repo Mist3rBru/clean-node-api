@@ -49,4 +49,11 @@ describe('Encrypter', () => {
     const isValid = await sut.compare('any-value', 'any-hash')
     expect(isValid).toBe(true)
   })
+
+  it('should return false if any params is invalid', async () => {
+    const sut = makeSut()
+    bcrypt.isValid = false
+    const isValid = await sut.compare('invalid-value', 'invalid-hash')
+    expect(isValid).toBe(false)
+  })
 })
