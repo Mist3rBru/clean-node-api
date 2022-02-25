@@ -1,7 +1,7 @@
 const MissingParamError = require('../utils/errors/MissingParamError')
 
 class AuthUseCase { 
-  constructor({findByEmailRepo} = {}){
+  constructor({ findByEmailRepo } = {}){
     this.findByEmailRepo = findByEmailRepo
   }
 
@@ -9,15 +9,19 @@ class AuthUseCase {
     if(!email) { 
       throw new MissingParamError('email')
     }
+    const user = await this.findByEmailRepo.find(email)
     if(!password) {
       throw new MissingParamError('password')
     }
+    return
   }
 }
 
 const makeSut = () => {
   const findByEmailRepoSpy = makeFindByEmailRepo()
-  const sut = new AuthUseCase()
+  const sut = new AuthUseCase({
+    findByEmailRepo: findByEmailRepoSpy
+  })
   return {
     sut, 
     findByEmailRepoSpy
@@ -26,7 +30,7 @@ const makeSut = () => {
 
 const makeFindByEmailRepo = () => { 
   class FindByEmailRepoSpy { 
-    find(email) { 
+    async find(email) { 
       this.email = email
       return this.user
     }
@@ -47,5 +51,11 @@ describe('AuthUseCase', () => {
     const { sut } = makeSut()
     expect(sut.auth()).rejects.toThrow(new MissingParamError('email').message)
     expect(sut.auth('any-email')).rejects.toThrow(new MissingParamError('password').message)
+  })
+
+  it('should call findByEmailRepo with correct values', async () => {
+    const { sut, findByEmailRepoSpy } = makeSut()
+    await sut.auth('any-email', 'any-password')
+    expect(findByEmailRepoSpy.email).toBe('any-email')
   })
 })
