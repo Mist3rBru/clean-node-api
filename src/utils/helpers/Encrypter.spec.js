@@ -1,31 +1,37 @@
+jest.mock('bcrypt', () => ({
+  isValid: true,
+
+  async compare (value, hash) {
+    this.value = value
+    this.hash = hash
+    return this.isValid
+  }
+}))
+
 const { MissingParamError } = require('../errors') 
 
-const { compare } = require('bcrypt')
+const bcrypt = require('bcrypt')
 
 class Encrypter {
-  async compare(value, hashedValue) { 
+  async compare(value, hash) { 
     if(!value) { 
       throw new MissingParamError('value')
     }
-    if(!hashedValue) { 
-      throw new MissingParamError('hashed-value')
+    if(!hash) { 
+      throw new MissingParamError('hash')
     }
+    return await bcrypt.compare(value, hashedValue)
   }
 }
 
 const makeSut = () => { 
-  const sut = new Encrypter()
-  return sut
+  return new Encrypter()
 }
 
 describe('Encrypter', () => {
-  it('should throw if no value is provided', async () => {
+  it('should throw if no params are provided', async () => {
     const sut = makeSut()
     expect(sut.compare()).rejects.toThrow(new MissingParamError('value').message)
-  })
-
-  it('should throw if no hashed value is provided', async () => {
-    const sut = makeSut()
-    expect(sut.compare('any-value')).rejects.toThrow(new MissingParamError('hashed-value').message)
+    expect(sut.compare('any-value')).rejects.toThrow(new MissingParamError('hash').message)
   })
 })
