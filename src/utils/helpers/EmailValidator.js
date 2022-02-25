@@ -1,5 +1,6 @@
 const MissingParamError = require('../errors/MissingParamError')
 const validator = require('validator')
+
 module.exports = class EmailValidator {
   isValid(email) {
     if(!email) {
