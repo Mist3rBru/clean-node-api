@@ -20,7 +20,7 @@ class Encrypter {
     if(!hash) { 
       throw new MissingParamError('hash')
     }
-    return await bcrypt.compare(value, hashedValue)
+    return await bcrypt.compare(value, hash)
   }
 }
 
@@ -33,5 +33,14 @@ describe('Encrypter', () => {
     const sut = makeSut()
     expect(sut.compare()).rejects.toThrow(new MissingParamError('value').message)
     expect(sut.compare('any-value')).rejects.toThrow(new MissingParamError('hash').message)
+  })
+
+  it('should return the same provided params', async () => {
+    const sut = makeSut()
+    const value = 'any-value'
+    const hash = 'any-hash'
+    await sut.compare(value, hash)
+    expect(bcrypt.value).toBe(value)
+    expect(bcrypt.hash).toBe(hash)
   })
 })
