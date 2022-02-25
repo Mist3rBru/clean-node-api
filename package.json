@@ -1,0 +1,34 @@
+{
+  "name": "jwt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "prestart": "npx sequelize-cli db:migrate",
+    "start": "nodemon src/server.js --ignore __tests__",
+    "test": "jest --passWithNoTests --watchAll --detectOpenHandles",
+    "preredo": "npx sequelize-cli db:migrate:undo:all",
+    "redo": "npx sequelize-cli db:migrate",
+    "postredo": "npm test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.7.3",
+    "redis": "^4.0.3",
+    "sequelize": "^6.16.2",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.9.0",
+    "jest": "^27.5.1",
+    "nodemon": "^2.0.15",
+    "sequelize-cli": "^6.4.1",
+    "supertest": "^6.2.2"
+  }
+}
