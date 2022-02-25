@@ -11,4 +11,11 @@ describe('Email Validator', () => {
     const sut = makeSut()
     expect(() => { sut.isValid() }).toThrow(new MissingParamError('email'))
   })
+
+  it('should return false if invalid email is provided', () => {
+    const sut = makeSut()
+    const email = 'invalid-email'
+    const res = sut.isValid(email)
+    expect(res).toBeFalsy()
+  })
 })
