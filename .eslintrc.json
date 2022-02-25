@@ -8,12 +8,12 @@
 	"parserOptions": {
 		"ecmaVersion": "latest"
 	},
-	"ignorePatterns": ["**/**.test.js", "**/**.spec.js"],
+	"ignorePatterns": ["**/*.test.js", "**/*.spec.js"],
 	"rules": {
 		"comma-spacing": ["error", { "before": false, "after": true }],
 		"arrow-spacing": ["error", { "before": true, "after": true }],
 		"quotes": ["error", "single"],
 		"semi": ["error", "never"],
 		"no-unused-vars": "off"
-	},
+	}
 }

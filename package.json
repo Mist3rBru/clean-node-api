@@ -1,34 +1,39 @@
 {
-  "name": "jwt",
+  "name": "clean-node-api",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
-  "scripts": {
-    "prestart": "npx sequelize-cli db:migrate",
-    "start": "nodemon src/server.js --ignore __tests__",
-    "test": "jest --passWithNoTests --watch",
-    "preredo": "npx sequelize-cli db:migrate:undo:all",
-    "redo": "npx sequelize-cli db:migrate",
-    "postredo": "npm test"
-  },
-  "keywords": [],
-  "author": "",
+  "description": "Construindo uma API Rest em NodeJS utilizando TDD, Clean Architecture e Design Patterns.",
+  "author": "Bruno Rocha",
   "license": "ISC",
+  "main": "src/main/index.js",
+  "scripts": {
+    "start": "node src/main/index.js",
+    "test": "jest --colors --noStackTrace --passWithNoTests --runInBand",
+    "test:unit": "npm test -- --watch -c jest-unit-config.js",
+    "test:integration": "npm test -- --watch -c jest-integration-config.js",
+    "test:staged": "npm test -- --findRelatedTests --silent",
+    "test:ci": "npm test -- --coverage --silent",
+    "test:coveralls": "npm run test:ci && coveralls < coverage/lcov.info"
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ]
+  },
   "dependencies": {
-    "bcrypt": "^5.0.1",
-    "dotenv": "^16.0.0",
-    "express": "^4.17.3",
+    "bcrypt": "^3.0.7",
+    "express": "^4.17.1",
+    "fast-glob": "^3.1.1",
     "jsonwebtoken": "^8.5.1",
-    "pg": "^8.7.3",
-    "redis": "^4.0.3",
-    "sequelize": "^6.16.2",
-    "uuid": "^8.3.2"
+    "mongodb": "^3.3.5",
+    "validator": "^12.1.0"
   },
   "devDependencies": {
-    "eslint": "^8.9.0",
-    "jest": "^27.5.1",
-    "nodemon": "^2.0.15",
-    "sequelize-cli": "^6.4.1",
-    "supertest": "^6.2.2"
+    "@shelf/jest-mongodb": "^1.1.3",
+    "coveralls": "^3.0.11",
+    "husky": "^4.0.0-beta.5",
+    "jest": "^24.9.0",
+    "lint-staged": "^9.4.3",
+    "standard": "^14.3.1",
+    "supertest": "^4.0.2"
   }
 }
