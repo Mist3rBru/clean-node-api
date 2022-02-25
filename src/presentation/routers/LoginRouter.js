@@ -6,6 +6,7 @@ module.exports = class LoginRouter {
     this.emailValidator = emailValidator
     this.authUseCase = authUseCase
   }
+  
   async route(httpRequest) {
     try {
       const { email, password } = httpRequest.body
