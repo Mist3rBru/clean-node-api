@@ -7,6 +7,7 @@ module.exports = class LoginRouter {
     this.authUseCase = authUseCase
   }
   async route(httpRequest) {
+    try {
     const { email, password } = httpRequest.body
     if(!email) {
       return HttpResponse.badRequest(new MissingParamError('email'))
@@ -22,5 +23,8 @@ module.exports = class LoginRouter {
       return HttpResponse.unauthorizedError()
     }
     return HttpResponse.ok({ accessToken })
+  } catch(error) {
+    return HttpResponse.serverError()
+  }
   }
 }
