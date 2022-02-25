@@ -1,5 +1,6 @@
 const LoginRouter = require('./LoginRouter')
 const { MissingParamError, InvalidParamError } = require('../../utils/errors')
+const { UnauthorizedError, ServerError } = require('../errors')
 
 const makeSut = () => {
   const emailValidatorSpy = makeEmailValidator()
@@ -32,11 +33,11 @@ const makeAuthUseCase = () => {
     async auth(email, password) {
       this.email = email
       this.password = password
-      return this.token
+      return this.accessToken
     }
   }
   const authUseCaseSpy = new AuthUseCaseSpy()
-  authUseCaseSpy.token = 'any-token'
+  authUseCaseSpy.accessToken = 'any-token'
   return authUseCaseSpy
 }
 
@@ -81,7 +82,7 @@ describe('Login', () => {
     
     it('should return 400 when a invalid password is provided', async() => {
       const { sut, authUseCaseSpy } = makeSut()
-      authUseCaseSpy.token = null
+      authUseCaseSpy.accessToken = null
       const httpRequest = {
         body: {
           email: 'any-email',
@@ -90,25 +91,11 @@ describe('Login', () => {
       }
       const HttpResponse = await sut.route(httpRequest)
       expect(HttpResponse.statusCode).toBe(401)
-      expect(HttpResponse.body.error).toBe('Unauthorized')
-    }),
-    
-    it('should return 400 when a invalid password is provided', async() => {
-      const { sut, authUseCaseSpy } = makeSut()
-      authUseCaseSpy.token = null
-      const httpRequest = {
-        body: {
-          email: 'any-email',
-          password: 'invalid-password',
-        }
-      }
-      const HttpResponse = await sut.route(httpRequest)
-      expect(HttpResponse.statusCode).toBe(401)
-      expect(HttpResponse.body.error).toBe('Unauthorized')
+      expect(HttpResponse.body.error).toBe(new UnauthorizedError().message)
     }),
     
     it('should return a token when valid credencials are provided', async() => {
-      const { sut } = makeSut()
+      const { sut, authUseCaseSpy } = makeSut()
       const httpRequest = {
         body: {
           email: 'any-email',
@@ -116,8 +103,7 @@ describe('Login', () => {
         }
       }
       const HttpResponse = await sut.route(httpRequest)
-      console.log(HttpResponse)
       expect(HttpResponse.statusCode).toBe(200)
-      expect(HttpResponse.body.token).toBe('any-token')
+      expect(HttpResponse.body.accessToken).toBe(authUseCaseSpy.accessToken)
     })
 })
