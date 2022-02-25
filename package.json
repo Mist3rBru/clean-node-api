@@ -6,7 +6,7 @@
   "scripts": {
     "prestart": "npx sequelize-cli db:migrate",
     "start": "nodemon src/server.js --ignore __tests__",
-    "test": "jest --passWithNoTests --watchAll --detectOpenHandles",
+    "test": "jest --passWithNoTests --watch",
     "preredo": "npx sequelize-cli db:migrate:undo:all",
     "redo": "npx sequelize-cli db:migrate",
     "postredo": "npm test"
