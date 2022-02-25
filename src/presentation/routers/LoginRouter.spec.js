@@ -144,4 +144,11 @@ describe('Login', () => {
       expect(httpResponse.body.error).toBe(new ServerError().message)
     }
   })
+
+  it('should return 500 if no httpRequest is provided', async() => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.route()
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body.error).toBe(new ServerError().message)
+  })
 })
