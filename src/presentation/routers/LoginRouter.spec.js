@@ -93,7 +93,23 @@ describe('Login', () => {
         body: {
           email: 'any-email',
           password: 'invalid-password',
-        },
+        }
+      }
+
+      const HttpResponse = await sut.route(httpRequest)
+
+      expect(HttpResponse.statusCode).toBe(401)
+      expect(HttpResponse.body.error).toBe('Unauthorized')
+    }),
+    
+    it('should return 400 when a invalid password is provided', async() => {
+      const { sut, authUseCaseSpy } = makeSut()
+      authUseCaseSpy.token = null
+      const httpRequest = {
+        body: {
+          email: 'any-email',
+          password: 'invalid-password',
+        }
       }
 
       const HttpResponse = await sut.route(httpRequest)
