@@ -7,7 +7,7 @@ const makeSut = () => {
 }
 
 describe('Email Validator', () => {
-	it('should throw if email is not provided', () => {
+	it('should throw if no email is provided', () => {
 		const sut = makeSut()
 		expect(() => {
 			sut.isValid()
