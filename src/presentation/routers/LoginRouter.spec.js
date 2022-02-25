@@ -30,7 +30,7 @@ describe('Login', () => {
       const { sut } = makeSut()
       const httpRequest = {
         body: {
-          password: 'any-password',
+          email: null,
         },
       }
 
@@ -53,5 +53,20 @@ describe('Login', () => {
 
       expect(HttpResponse.statusCode).toBe(400)
       expect(HttpResponse.body.error).toBe(new InvalidParamError('email').message)
+    }),
+
+    it('should return 400 when password is not provided', async() => {
+      const { sut } = makeSut()
+      const httpRequest = {
+        body: {
+          email: 'any-email',
+          password: null
+        },
+      }
+
+      const HttpResponse = await sut.route(httpRequest)
+
+      expect(HttpResponse.statusCode).toBe(400)
+      expect(HttpResponse.body.error).toBe(new MissingParamError('password').message)
     })
 })

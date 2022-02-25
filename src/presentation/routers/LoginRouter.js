@@ -13,5 +13,8 @@ module.exports = class LoginRouter {
     if(!this.emailValidator.isValid(email)) {
       return HttpResponse.badRequest(new InvalidParamError('email'))
     }
+    if(!password) {
+      return HttpResponse.badRequest(new MissingParamError('password'))
+    }
   }
 }
