@@ -4,7 +4,7 @@ module.exports = class HttpResponse {
   static ok(body) {
     return {
       statusCode: 200,
-      body
+      body: body
     }
   }
 

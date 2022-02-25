@@ -40,7 +40,6 @@ const makeAuthUseCase = () => {
   return authUseCaseSpy
 }
 
-
 describe('Login', () => {
   it('should return 400 when email is not provided', async() => {
       const { sut } = makeSut()
@@ -49,9 +48,7 @@ describe('Login', () => {
           email: null,
         },
       }
-
       const HttpResponse = await sut.route(httpRequest)
-
       expect(HttpResponse.statusCode).toBe(400)
       expect(HttpResponse.body.error).toBe(new MissingParamError('email').message)
     }),
@@ -64,9 +61,7 @@ describe('Login', () => {
           email: 'invalid-email',
         },
       }
-
       const HttpResponse = await sut.route(httpRequest)
-
       expect(HttpResponse.statusCode).toBe(400)
       expect(HttpResponse.body.error).toBe(new InvalidParamError('email').message)
     }),
@@ -79,9 +74,7 @@ describe('Login', () => {
           password: null
         },
       }
-
       const HttpResponse = await sut.route(httpRequest)
-
       expect(HttpResponse.statusCode).toBe(400)
       expect(HttpResponse.body.error).toBe(new MissingParamError('password').message)
     }),
@@ -95,9 +88,7 @@ describe('Login', () => {
           password: 'invalid-password',
         }
       }
-
       const HttpResponse = await sut.route(httpRequest)
-
       expect(HttpResponse.statusCode).toBe(401)
       expect(HttpResponse.body.error).toBe('Unauthorized')
     }),
@@ -111,10 +102,22 @@ describe('Login', () => {
           password: 'invalid-password',
         }
       }
-
       const HttpResponse = await sut.route(httpRequest)
-
       expect(HttpResponse.statusCode).toBe(401)
       expect(HttpResponse.body.error).toBe('Unauthorized')
+    }),
+    
+    it('should return a token when valid credencials are provided', async() => {
+      const { sut } = makeSut()
+      const httpRequest = {
+        body: {
+          email: 'any-email',
+          password: 'any-password',
+        }
+      }
+      const HttpResponse = await sut.route(httpRequest)
+      console.log(HttpResponse)
+      expect(HttpResponse.statusCode).toBe(200)
+      expect(HttpResponse.body.token).toBe('any-token')
     })
 })
