@@ -23,7 +23,7 @@ describe('Encrypter', () => {
     expect(sut.compare('any-value')).rejects.toThrow(new MissingParamError('hash').message)
   })
 
-  it('should return the same provided params', async () => {
+  it('should call bcrypt with correct values', async () => {
     const sut = makeSut()
     const value = 'any-value'
     const hash = 'any-hash'
