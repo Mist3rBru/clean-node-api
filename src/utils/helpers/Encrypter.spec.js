@@ -8,21 +8,9 @@ jest.mock('bcrypt', () => ({
   }
 }))
 
-const { MissingParamError } = require('../errors') 
-
+const MissingParamError = require('../errors/MissingParamError') 
+const Encrypter = require('./Encrypter')
 const bcrypt = require('bcrypt')
-
-class Encrypter {
-  async compare(value, hash) { 
-    if(!value) { 
-      throw new MissingParamError('value')
-    }
-    if(!hash) { 
-      throw new MissingParamError('hash')
-    }
-    return await bcrypt.compare(value, hash)
-  }
-}
 
 const makeSut = () => { 
   return new Encrypter()
