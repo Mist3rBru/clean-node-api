@@ -1,21 +1,25 @@
 jest.mock('jsonwebtoken', () => ({
 	token: 'any-token',
 
-	async sign(payload) {
+	async sign(payload, secret, options) {
 		this.payload = payload
+		this.secret = secret
+		this.options = options
 		return this.token
 	},
 }))
 
+const { parsed: env } = require('dotenv').config()
+
 const MissingParamError = require('../errors/MissingParamError')
 const jwt = require('jsonwebtoken')
 
-jwt.sign()
 class TokenGenerator {
 	async generate(payload) {
 		if (!payload) {
 			throw new MissingParamError('payload')
 		}
+		return jwt.sign(payload, env.TOKEN_SECRET, { expiresIn: '15m' })
 	}
 }
 
@@ -29,5 +33,11 @@ describe('TokenGenerator', () => {
 		const sut = makeSut()
 		const promise = sut.generate()
 		expect(promise).rejects.toThrow(new MissingParamError('payload'))
+	})
+
+	it('should return token if valid payload is provided', async () => {
+		const sut = makeSut()
+		const token = await sut.generate('any-payload')
+		expect(token).toBe('any-token')
 	})
 })
