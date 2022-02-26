@@ -57,4 +57,11 @@ describe('TokenVerify', () => {
     const isValid = await sut.verify('valid-token', 'valid-secret')
     expect(isValid).toBeTruthy()
   })
+
+  it('should return false if invalid params are provided', async () => {
+    const sut = makeSut()
+    jwt.error = true
+    const isValid = await sut.verify('invalid-token', 'invalid-secret')
+    expect(isValid).toBeFalsy()
+  })
 })
