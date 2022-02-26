@@ -111,4 +111,31 @@ describe('AuthUseCase', () => {
 		const accessToken = await sut.auth('any-email', 'invalid-password')
 		expect(accessToken).toBeNull()
 	})
+
+	it('should throw if any dependency is not provided', async () => {
+    const invalid = {}
+    const findByEmailRepo = makeFindByEmailRepo()
+    const encrypter = makeEncrypter()
+    const tokenGenerator = makeTokenGenerator()
+    const suts = [].concat(
+      new AuthUseCase(),
+      new AuthUseCase({}),
+      new AuthUseCase({
+        findByEmailRepo: invalid
+      }),
+      new AuthUseCase({
+        findByEmailRepo,
+        encrypter: invalid
+      }),
+      new AuthUseCase({
+        findByEmailRepo,
+        encrypter,
+        tokenGenerator: invalid
+      }),
+    )
+    for(let sut of suts) {
+      const promise = sut.auth('any-email', 'any-password')
+      expect(promise).rejects.toThrow()
+    } 
+	})
 })
