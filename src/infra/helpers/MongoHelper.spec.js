@@ -5,6 +5,10 @@ jest.mock('mongoose', () => ({
 		this.uri = uri
 		return this.db
 	},
+
+	async disconnect() {
+		return null
+	}
 }))
 
 const sut = require('./MongoHelper')
@@ -16,8 +20,13 @@ describe('MongoHelper', () => {
 		expect(mongoose.uri).toBe('any-uri')
 	})
 
-	it('should return db when valid uri is provided', async () => {
+	it('should return database when valid uri is provided', async () => {
 		const db = await sut.connect('any-uri')
 		expect(db).toBe('any-db')
+	})
+
+	it('should set database to null on disconnect', async () => {
+		await sut.disconnect()
+		expect(sut.db).toBeNull()
 	})
 })
