@@ -9,7 +9,8 @@ class FindUserByEmailRepository {
     if(!email) {
       throw new MissingParamError('email')
     }
-    await this.model.findOne({ email })
+    await this.model.findOne({ where: { email }})
+    return ''
   }
 }
 
@@ -24,8 +25,8 @@ const makeSut = () => {
 
 const makeModel = () => {
   class Model {
-    async findOne({ email }) { 
-      this.email = email
+    async findOne(object) { 
+      this.email = object.where.email
       return this.user 
     }
   }
@@ -39,5 +40,11 @@ describe('FindUserByEmailRepository', () => {
     const { sut } = makeSut()
     const promise = sut.find()
     expect(promise).rejects.toThrow(new MissingParamError('email'))
+  })
+
+  it('should call model with correct values', async () => {
+    const { sut, modelSpy } = makeSut()
+    await sut.find('any-email')
+    expect(modelSpy.email).toBe('any-email')
   })
 })
