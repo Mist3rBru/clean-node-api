@@ -32,6 +32,12 @@ const makeFindByEmailRepo = () => {
   }
 	return findByEmailRepoSpy
 }
+const makeFindByEmailRepoWithError = () => {
+	class FindByEmailRepoSpy {
+		async find() { throw new Error() }
+	}
+	return new FindByEmailRepoSpy()
+}
 
 const makeEncrypter = () => {
   class EncrypterSpy {
@@ -46,6 +52,13 @@ const makeEncrypter = () => {
   return encrypterSpy
 }
 
+const makeEncrypterWithError = () => {
+  class EncrypterSpy {
+    async compare() { throw new Error() }
+  }
+  return new EncrypterSpy()
+}
+
 const makeTokenGenerator = () => {
   class TokenGeneratorSpy {
     async generate(id) { 
@@ -56,6 +69,13 @@ const makeTokenGenerator = () => {
   const tokenGeneratorSpy = new TokenGeneratorSpy()
   tokenGeneratorSpy.token = 'any-token'
   return tokenGeneratorSpy
+}
+
+const makeTokenGeneratorWithError = () => {
+  class TokenGeneratorSpy {
+    async generate() { throw new Error()}
+  }
+  return new TokenGeneratorSpy()
 }
 
 describe('AuthUseCase', () => {
@@ -116,7 +136,6 @@ describe('AuthUseCase', () => {
     const invalid = {}
     const findByEmailRepo = makeFindByEmailRepo()
     const encrypter = makeEncrypter()
-    const tokenGenerator = makeTokenGenerator()
     const suts = [].concat(
       new AuthUseCase(),
       new AuthUseCase({}),
@@ -131,6 +150,29 @@ describe('AuthUseCase', () => {
         findByEmailRepo,
         encrypter,
         tokenGenerator: invalid
+      }),
+    )
+    for(let sut of suts) {
+      const promise = sut.auth('any-email', 'any-password')
+      expect(promise).rejects.toThrow()
+    } 
+	})
+
+	it('should throw if any dependency throws', async () => {
+    const findByEmailRepo = makeFindByEmailRepo()
+    const encrypter = makeEncrypter()
+    const suts = [].concat(
+      new AuthUseCase({
+        findByEmailRepo: makeFindByEmailRepoWithError()
+      }),
+      new AuthUseCase({
+        findByEmailRepo,
+        encrypter: makeEncrypterWithError()
+      }),
+      new AuthUseCase({
+        findByEmailRepo,
+        encrypter,
+        tokenGenerator: makeTokenGeneratorWithError()
       }),
     )
     for(let sut of suts) {
