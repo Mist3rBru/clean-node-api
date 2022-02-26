@@ -35,6 +35,14 @@ describe('TokenGenerator', () => {
 		expect(promise).rejects.toThrow(new MissingParamError('payload'))
 	})
 
+	it('should call jwt sign with correct values', async () => {
+		const sut = makeSut()
+		await sut.generate('any-payload')
+		expect(jwt.payload).toBe('any-payload')
+		expect(jwt.secret).toBe(env.TOKEN_SECRET)
+		expect(jwt.options).toEqual({ expiresIn: '15m' })
+	})
+
 	it('should return token if valid payload is provided', async () => {
 		const sut = makeSut()
 		const token = await sut.generate('any-payload')
