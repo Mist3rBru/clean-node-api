@@ -61,8 +61,8 @@ const makeEncrypterWithError = () => {
 
 const makeTokenGenerator = () => {
   class TokenGeneratorSpy {
-    async generate(id) { 
-      this.id = id
+    async generate(payload) { 
+      this.payload = payload
       return this.token
     }
   }
@@ -103,13 +103,13 @@ describe('AuthUseCase', () => {
 	it('should call token generator with correct values', async () => {
 		const { sut, tokenGeneratorSpy } = makeSut()
 		await sut.auth('any-email', 'any-password')
-		expect(tokenGeneratorSpy.id).toBe('any-id')
+		expect(tokenGeneratorSpy.payload).toBe('any-id')
 	})
 
 	it('should call token generator with correct values', async () => {
 		const { sut, tokenGeneratorSpy } = makeSut()
 		await sut.auth('any-email', 'any-password')
-		expect(tokenGeneratorSpy.id).toBe('any-id')
+		expect(tokenGeneratorSpy.payload).toBe('any-id')
 	})
 
 	it('should return access token when valid params are provided', async () => {
