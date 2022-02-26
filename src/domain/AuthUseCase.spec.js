@@ -2,41 +2,41 @@ const MissingParamError = require('../utils/errors/MissingParamError')
 const AuthUseCase = require('./AuthUseCase')
 
 const makeSut = () => {
-	const findByEmailRepoSpy = makeFindByEmailRepo()
+	const findUserByEmailRepositorySpy = makeFindUserByEmailRepositorysitory()
 	const encrypterSpy = makeEncrypter()
   const tokenGeneratorSpy = makeTokenGenerator()
 	const sut = new AuthUseCase({
-		findByEmailRepo: findByEmailRepoSpy,
+		findUserByEmailRepository: findUserByEmailRepositorySpy,
     encrypter: encrypterSpy,
     tokenGenerator: tokenGeneratorSpy
 	})
 	return {
 		sut,
-		findByEmailRepoSpy,
+		findUserByEmailRepositorySpy,
     encrypterSpy,
     tokenGeneratorSpy
 	}
 }
 
-const makeFindByEmailRepo = () => {
-	class FindByEmailRepoSpy {
+const makeFindUserByEmailRepositorysitory = () => {
+	class FindUserByEmailRepositorySpy {
 		async find(email) {
 			this.email = email
 			return this.user
 		}
 	}
-	const findByEmailRepoSpy = new FindByEmailRepoSpy()
-	findByEmailRepoSpy.user = { 
-    password_hash: 'any-hash',
+	const findUserByEmailRepositorySpy = new FindUserByEmailRepositorySpy()
+	findUserByEmailRepositorySpy.user = { 
     id: 'any-id',
+    password_hash: 'any-hash',
   }
-	return findByEmailRepoSpy
+	return findUserByEmailRepositorySpy
 }
-const makeFindByEmailRepoWithError = () => {
-	class FindByEmailRepoSpy {
+const makeFindUserByEmailRepositoryWithError = () => {
+	class FindUserByEmailRepositorySpy {
 		async find() { throw new Error() }
 	}
-	return new FindByEmailRepoSpy()
+	return new FindUserByEmailRepositorySpy()
 }
 
 const makeEncrypter = () => {
@@ -87,10 +87,10 @@ describe('AuthUseCase', () => {
 		)
 	})
 
-	it('should call findByEmailRepo with correct values', async () => {
-		const { sut, findByEmailRepoSpy } = makeSut()
+	it('should call findUserByEmailRepository with correct values', async () => {
+		const { sut, findUserByEmailRepositorySpy } = makeSut()
 		await sut.auth('any-email', 'any-password')
-		expect(findByEmailRepoSpy.email).toBe('any-email')
+		expect(findUserByEmailRepositorySpy.email).toBe('any-email')
 	})
 
 	it('should call encrypter with correct values', async () => {
@@ -119,8 +119,8 @@ describe('AuthUseCase', () => {
 	})
 
 	it('should return null when invalid email is provided', async () => {
-		const { sut, findByEmailRepoSpy } = makeSut()
-    findByEmailRepoSpy.user = null
+		const { sut, findUserByEmailRepositorySpy } = makeSut()
+    findUserByEmailRepositorySpy.user = null
 		const accessToken = await sut.auth('invalid-email', 'any-password')
 		expect(accessToken).toBeNull()
 	})
@@ -134,20 +134,20 @@ describe('AuthUseCase', () => {
 
 	it('should throw if any dependency is not provided', async () => {
     const invalid = {}
-    const findByEmailRepo = makeFindByEmailRepo()
+    const findUserByEmailRepository = makeFindUserByEmailRepositorysitory()
     const encrypter = makeEncrypter()
     const suts = [].concat(
       new AuthUseCase(),
       new AuthUseCase({}),
       new AuthUseCase({
-        findByEmailRepo: invalid
+        findUserByEmailRepository: invalid
       }),
       new AuthUseCase({
-        findByEmailRepo,
+        findUserByEmailRepository,
         encrypter: invalid
       }),
       new AuthUseCase({
-        findByEmailRepo,
+        findUserByEmailRepository,
         encrypter,
         tokenGenerator: invalid
       }),
@@ -159,18 +159,18 @@ describe('AuthUseCase', () => {
 	})
 
 	it('should throw if any dependency throws', async () => {
-    const findByEmailRepo = makeFindByEmailRepo()
+    const findUserByEmailRepository = makeFindUserByEmailRepositorysitory()
     const encrypter = makeEncrypter()
     const suts = [].concat(
       new AuthUseCase({
-        findByEmailRepo: makeFindByEmailRepoWithError()
+        findUserByEmailRepository: makeFindUserByEmailRepositoryWithError()
       }),
       new AuthUseCase({
-        findByEmailRepo,
+        findUserByEmailRepository,
         encrypter: makeEncrypterWithError()
       }),
       new AuthUseCase({
-        findByEmailRepo,
+        findUserByEmailRepository,
         encrypter,
         tokenGenerator: makeTokenGeneratorWithError()
       }),
