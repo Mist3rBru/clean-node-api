@@ -1,11 +1,21 @@
-const MissingParamError = require('../errors/MissingParamError')
+jest.mock('jsonwebtoken', () => ({
+	token: 'any-token',
 
+	async sign(payload) {
+		this.payload = payload
+		return this.token
+	},
+}))
+
+const MissingParamError = require('../errors/MissingParamError')
+const jwt = require('jsonwebtoken')
+
+jwt.sign()
 class TokenGenerator {
 	async generate(payload) {
 		if (!payload) {
 			throw new MissingParamError('payload')
 		}
-		return
 	}
 }
 
