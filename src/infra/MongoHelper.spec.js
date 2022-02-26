@@ -1,28 +1,32 @@
 const mongoose = require('mongoose')
-const { }
+const { parsed: env } = require('dotenv').config()
 
 class MongoHelper {
-  constructor({ url } = {}) { 
-    this.url = url
+  constructor(uri) { 
+    this.uri = uri
   }
-  connect() {
+  async connect() {
     mongoose.Promise = global.Promise
-    mongoose.connect(url, { 
-      useMongoClient: true,
-    }).then(() => {
-      console.log('Mongo is connected');
-    }).catch((error) => {
-      throw new Error(error.message)
-    })
+    await mongoose.connect(this.uri)
+      .then(() => {
+        console.log('Mongo is connected')
+      })
+      .catch((error) => {
+        throw new Error(error.message)
+      })
+    return true
   } 
 }
 
 const makeSut = () => {
-  return new MongoHelper()
+  const uri = env.MONGO_URL
+  return new MongoHelper(uri)
 }
 
 describe('MongoHelper', () => {
-  it('', () => {
-    
+  it('should return true if valid uri is provided', async () => {
+    const sut = makeSut()
+    const res = await sut.connect()
+    expect(res).toBeTruthy()
   })
 })
