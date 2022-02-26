@@ -9,43 +9,43 @@ jest.mock('jsonwebtoken', () => ({
 	},
 }))
 
-const { parsed: env } = require('dotenv').config()
-
 const MissingParamError = require('../errors/MissingParamError')
 const jwt = require('jsonwebtoken')
 
 class TokenGenerator {
-	async generate(payload) {
+	async generate(payload, secret) {
 		if (!payload) {
 			throw new MissingParamError('payload')
 		}
-		return jwt.sign(payload, env.TOKEN_SECRET, { expiresIn: '15m' })
+    if (!secret) { 
+      throw new MissingParamError('secret')
+    }
+		return jwt.sign(payload, secret, { expiresIn: '15m' })
 	}
 }
 
 const makeSut = () => {
-	const sut = new TokenGenerator()
-	return sut
+	return new TokenGenerator()
 }
 
 describe('TokenGenerator', () => {
-	it('should throws if no payload is provided', () => {
+	it('should throws if any param is not provided', () => {
 		const sut = makeSut()
-		const promise = sut.generate()
-		expect(promise).rejects.toThrow(new MissingParamError('payload'))
+		expect(sut.generate()).rejects.toThrow(new MissingParamError('payload'))
+		expect(sut.generate('any-payload')).rejects.toThrow(new MissingParamError('secret'))
 	})
 
 	it('should call jwt sign with correct values', async () => {
 		const sut = makeSut()
-		await sut.generate('any-payload')
+		await sut.generate('any-payload', 'any-secret')
 		expect(jwt.payload).toBe('any-payload')
 		expect(jwt.secret).toBe(env.TOKEN_SECRET)
 		expect(jwt.options).toEqual({ expiresIn: '15m' })
 	})
 
-	it('should return token if valid payload is provided', async () => {
+	it('should return token if valid params are provided', async () => {
 		const sut = makeSut()
-		const token = await sut.generate('any-payload')
+		const token = await sut.generate('any-payload', 'any-secret')
 		expect(token).toBe('any-token')
 	})
 })
