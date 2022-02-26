@@ -85,4 +85,16 @@ describe('AuthUseCase', () => {
 		await sut.auth('any-email', 'any-password')
 		expect(tokenGeneratorSpy.id).toBe('any-id')
 	})
+
+	it('should call token generator with correct values', async () => {
+		const { sut, tokenGeneratorSpy } = makeSut()
+		await sut.auth('any-email', 'any-password')
+		expect(tokenGeneratorSpy.id).toBe('any-id')
+	})
+
+	it('should return access token when valid params are provided', async () => {
+		const { sut } = makeSut()
+		const accessToken = await sut.auth('any-email', 'any-password')
+		expect(accessToken).toBe('any-token')
+	})
 })
