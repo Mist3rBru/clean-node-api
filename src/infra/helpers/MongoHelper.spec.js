@@ -1,14 +1,11 @@
 jest.mock('mongoose', () => ({
-	db: 'any-db',
-
-	async createConnection(uri) {
+	db: { async collection(){} },
+	createConnection(uri) {
 		this.uri = uri
 		return this.db
 	},
 
-	async disconnect() {
-		return null
-	}
+	async disconnect() { return null }
 }))
 
 const sut = require('./MongoHelper')
@@ -22,11 +19,17 @@ describe('MongoHelper', () => {
 
 	it('should return database when valid uri is provided', async () => {
 		const db = await sut.connect('any-uri')
-		expect(db).toBe('any-db')
+		expect(db).toHaveProperty('collection')
 	})
 
 	it('should set database to null on disconnect', async () => {
 		await sut.disconnect()
-		expect(sut.db).toBeNull()
+		expect(sut.db).toBeFalsy()
 	})
+
+  it('should reconnect when getCollection() is invoked and database is disconnected', async () => {
+		await sut.disconnect()
+    await sut.getCollection('users')
+    expect(sut.db).toBeTruthy()
+  })
 })
