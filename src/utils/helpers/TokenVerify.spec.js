@@ -1,10 +1,10 @@
 jest.mock('jsonwebtoken', () => ({
-  isValid: true,
+  error: false,
 
   verify(token, secret, cb) { 
     this.token = token
     this.secret = secret
-    cb(this.isValid)
+    cb(this.error)
   }
 }))
 
@@ -19,7 +19,9 @@ class TokenVerify {
     if(!secret) {
       throw new MissingParamError('secret')
     }
-
+    jwt.verify(token, secret, (error) => {
+      return error ? false : true
+    })
   }
 }
 
@@ -39,5 +41,12 @@ describe('TokenVerify', () => {
     const sut = makeSut()
     const promise = sut.verify('any-token')
     expect(promise).rejects.toThrow(new MissingParamError('secret'))
+  })
+
+  it('should calls jwt with correct values', async () => {
+    const sut = makeSut()
+    await sut.verify('any-token', 'any-secret')
+    expect(jwt.token).toBe('any-token')
+    expect(jwt.secret).toBe('any-secret')
   })
 })
