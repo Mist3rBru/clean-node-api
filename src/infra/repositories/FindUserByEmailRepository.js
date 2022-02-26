@@ -9,7 +9,10 @@ module.exports = class FindUserByEmailRepository {
     if(!email) {
       throw new MissingParamError('email')
     }
-    const user = await this.model.findOne({ where: { email }})
+    const user = await this.model.findOne({ 
+      where: { email },
+      attributes: ['id', 'name', 'email']
+    })
     return user
   }
 }
