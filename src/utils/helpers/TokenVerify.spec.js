@@ -19,9 +19,11 @@ class TokenVerify {
     if(!secret) {
       throw new MissingParamError('secret')
     }
+    let isValid
     jwt.verify(token, secret, (error) => {
-      return error ? false : true
+      isValid =  error ? false : true
     })
+    return isValid
   }
 }
 
@@ -48,5 +50,11 @@ describe('TokenVerify', () => {
     await sut.verify('any-token', 'any-secret')
     expect(jwt.token).toBe('any-token')
     expect(jwt.secret).toBe('any-secret')
+  })
+
+  it('should return true if valid params are provided', async () => {
+    const sut = makeSut()
+    const isValid = await sut.verify('valid-token', 'valid-secret')
+    expect(isValid).toBeTruthy()
   })
 })
