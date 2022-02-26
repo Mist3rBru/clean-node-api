@@ -26,7 +26,10 @@ const makeFindByEmailRepo = () => {
 		}
 	}
 	const findByEmailRepoSpy = new FindByEmailRepoSpy()
-	findByEmailRepoSpy.user = { password_hash: 'any-hash' }
+	findByEmailRepoSpy.user = { 
+    password_hash: 'any-hash',
+    id: 'any-id',
+  }
 	return findByEmailRepoSpy
 }
 
@@ -75,5 +78,11 @@ describe('AuthUseCase', () => {
 		await sut.auth('any-email', 'any-password')
 		expect(encrypterSpy.value).toBe('any-password')
 		expect(encrypterSpy.hash).toBe('any-hash')
+	})
+
+	it('should call token generator with correct values', async () => {
+		const { sut, tokenGeneratorSpy } = makeSut()
+		await sut.auth('any-email', 'any-password')
+		expect(tokenGeneratorSpy.id).toBe('any-id')
 	})
 })
