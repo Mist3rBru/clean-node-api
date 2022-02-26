@@ -34,4 +34,11 @@ describe('FindUserByEmailRepository', () => {
     await sut.find('any-email')
     expect(modelSpy.email).toBe('any-email')
   })
+
+  it('should return null when invalid email is provided', async () => {
+    const { sut, modelSpy } = makeSut()
+    modelSpy.user = null
+    const user = await sut.find('invalid-email')
+    expect(user).toBeNull()
+  })
 })
