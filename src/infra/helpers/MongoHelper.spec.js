@@ -22,6 +22,11 @@ describe('MongoHelper', () => {
 		expect(mongoose.uri).toBe('any-uri')
 	})
 
+	it('should set database to mongo client when connect', async () => {
+		await sut.connect('any-uri')
+		expect(sut.db).toBeTruthy()
+	})
+
 	it('should return database when valid uri is provided', async () => {
 		const db = await sut.connect('any-uri')
 		expect(db).toHaveProperty('collection')
