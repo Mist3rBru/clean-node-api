@@ -1,18 +1,5 @@
 const MissingParamError = require('../../utils/errors/MissingParamError')
-
-class FindUserByEmailRepository { 
-  constructor(model) {
-    this.model = model
-  }
-
-  async find(email) { 
-    if(!email) {
-      throw new MissingParamError('email')
-    }
-    await this.model.findOne({ where: { email }})
-    return ''
-  }
-}
+const FindUserByEmailRepository = require('./FindUserByEmailRepository')
 
 const makeSut = () => {
   const modelSpy = makeModel()
