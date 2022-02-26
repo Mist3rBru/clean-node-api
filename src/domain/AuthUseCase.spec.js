@@ -4,14 +4,17 @@ const AuthUseCase = require('./AuthUseCase')
 const makeSut = () => {
 	const findByEmailRepoSpy = makeFindByEmailRepo()
 	const encrypterSpy = makeEncrypter()
+  const tokenGeneratorSpy = makeTokenGenerator()
 	const sut = new AuthUseCase({
 		findByEmailRepo: findByEmailRepoSpy,
-    encrypter: encrypterSpy
+    encrypter: encrypterSpy,
+    tokenGenerator: tokenGeneratorSpy
 	})
 	return {
 		sut,
 		findByEmailRepoSpy,
-    encrypterSpy
+    encrypterSpy,
+    tokenGeneratorSpy
 	}
 }
 
@@ -38,6 +41,18 @@ const makeEncrypter = () => {
   const encrypterSpy = new EncrypterSpy()
   encrypterSpy.isValid = true
   return encrypterSpy
+}
+
+const makeTokenGenerator = () => {
+  class TokenGeneratorSpy {
+    async generate(id) { 
+      this.id = id
+      return this.token
+    }
+  }
+  const tokenGeneratorSpy = new TokenGeneratorSpy()
+  tokenGeneratorSpy.token = 'any-token'
+  return tokenGeneratorSpy
 }
 
 describe('AuthUseCase', () => {
