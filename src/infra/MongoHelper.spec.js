@@ -1,3 +1,12 @@
+jest.mock('mongoose', () => ({
+  db: 'any-db',
+  
+  async createConnection(uri) {
+    this.uri = uri
+    return this.db
+  }
+}))
+
 const mongoose = require('mongoose')
 const { parsed: env } = require('dotenv').config()
 
@@ -5,17 +14,11 @@ class MongoHelper {
   constructor(uri) { 
     this.uri = uri
   }
+
   async connect() {
-    mongoose.Promise = global.Promise
-    await mongoose.connect(this.uri)
-      .then(() => {
-        console.log('Mongo is connected')
-      })
-      .catch((error) => {
-        throw new Error(error.message)
-      })
-    return true
-  } 
+    this.db =  mongoose.createConnection(this.uri)
+    return this.db
+  }
 }
 
 const makeSut = () => {
