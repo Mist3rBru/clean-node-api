@@ -1,5 +1,10 @@
 jest.mock('mongoose', () => ({
-	db: { async collection(){} },
+	db: { 
+		async collection(name){ 
+			return name
+		} 
+	},
+
 	createConnection(uri) {
 		this.uri = uri
 		return this.db
@@ -31,5 +36,10 @@ describe('MongoHelper', () => {
 		await sut.disconnect()
     await sut.getCollection('users')
     expect(sut.db).toBeTruthy()
+  })
+
+  it('should return collection form database', async () => {
+    const collection = await sut.getCollection('any-collection')
+    expect(collection).toBe('any-collection')
   })
 })
