@@ -104,4 +104,11 @@ describe('AuthUseCase', () => {
 		const accessToken = await sut.auth('invalid-email', 'any-password')
 		expect(accessToken).toBeNull()
 	})
+
+	it('should return null when invalid password is provided', async () => {
+		const { sut, encrypterSpy } = makeSut()
+    encrypterSpy.isValid = false
+		const accessToken = await sut.auth('any-email', 'invalid-password')
+		expect(accessToken).toBeNull()
+	})
 })
