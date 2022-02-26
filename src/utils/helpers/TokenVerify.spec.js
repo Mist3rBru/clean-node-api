@@ -8,16 +8,26 @@ jest.mock('jsonwebtoken', () => ({
   }
 }))
 
+const MissingParamError = require('../../utils/errors/MissingParamError')
 const jwt = require('jsonwebtoken')
 
 class TokenVerify {
   async verify(token) {
-
+    if(!token) {
+      throw new MissingParamError('token')
+    }
   }
 }
 
+const makeSut = () => {
+  const sut = new TokenVerify()
+  return sut
+}
+
 describe('TokenVerify', () => {
-  it('', () => {
-    
+  it('should throw if no token is provided', async () => {
+    const sut = makeSut()
+    const promise = sut.verify()
+    expect(promise).rejects.toThrow(new MissingParamError('token'))
   })
 })
