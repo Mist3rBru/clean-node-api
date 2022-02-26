@@ -9,20 +9,9 @@ jest.mock('jsonwebtoken', () => ({
 	},
 }))
 
+const TokenGenerator = require('./TokenGenerator')
 const MissingParamError = require('../errors/MissingParamError')
 const jwt = require('jsonwebtoken')
-
-class TokenGenerator {
-	async generate(payload, secret) {
-		if (!payload) {
-			throw new MissingParamError('payload')
-		}
-    if (!secret) { 
-      throw new MissingParamError('secret')
-    }
-		return jwt.sign(payload, secret, { expiresIn: '15m' })
-	}
-}
 
 const makeSut = () => {
 	return new TokenGenerator()
