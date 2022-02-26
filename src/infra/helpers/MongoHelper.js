@@ -1,11 +1,8 @@
 const mongoose = require('mongoose')
 
-module.exports = class MongoHelper {
-  constructor(uri) { 
+module.exports ={
+  async connect(uri) { 
     this.uri = uri
-  }
-
-  async connect() {
     this.db =  mongoose.createConnection(this.uri)
     return this.db
   }

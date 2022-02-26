@@ -7,24 +7,17 @@ jest.mock('mongoose', () => ({
 	},
 }))
 
-const MongoHelper = require('./MongoHelper')
+const sut = require('./MongoHelper')
 const mongoose = require('mongoose')
-
-const makeSut = () => {
-	const sut = new MongoHelper('any-uri')
-	return sut
-}
 
 describe('MongoHelper', () => {
 	it('should call mongoose createConnection with correct values', async () => {
-		const sut = new MongoHelper('any-uri')
-		await sut.connect()
+		await sut.connect('any-uri')
 		expect(mongoose.uri).toBe('any-uri')
 	})
 
 	it('should return db when valid uri is provided', async () => {
-		const sut = makeSut()
-		const db = await sut.connect()
+		const db = await sut.connect('any-uri')
 		expect(db).toBe('any-db')
 	})
 })
