@@ -97,4 +97,11 @@ describe('AuthUseCase', () => {
 		const accessToken = await sut.auth('any-email', 'any-password')
 		expect(accessToken).toBe('any-token')
 	})
+
+	it('should return null when invalid email is provided', async () => {
+		const { sut, findByEmailRepoSpy } = makeSut()
+    findByEmailRepoSpy.user = null
+		const accessToken = await sut.auth('invalid-email', 'any-password')
+		expect(accessToken).toBeNull()
+	})
 })
