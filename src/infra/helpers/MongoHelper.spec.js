@@ -15,10 +15,16 @@ jest.mock('mongoose', () => ({
 
 const sut = require('./MongoHelper')
 const mongoose = require('mongoose')
+const MissingParamError = require('../../utils/errors/MissingParamError')
 
 describe('MongoHelper', () => {
 	afterAll(async () => {
 		await sut.disconnect()
+	})
+
+	it('should throw if no uri is provided', async () => {
+		const promise =  sut.connect()
+		expect(promise).rejects.toThrow(new MissingParamError('uri'))
 	})
 
 	it('should call mongoose createConnection with correct values', async () => {

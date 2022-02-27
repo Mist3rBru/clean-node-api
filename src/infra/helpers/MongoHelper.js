@@ -1,7 +1,11 @@
+const MissingParamError = require('../../utils/errors/MissingParamError')
 const mongoose = require('mongoose')
 
 module.exports = {
   async connect(uri) { 
+    if(!uri) {
+      throw new MissingParamError('uri')
+    }
     this.uri = uri
     this.db = mongoose.createConnection(this.uri)
     return this.db
