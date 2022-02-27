@@ -8,6 +8,7 @@ const fg = require('fast-glob')
 class App {
 	constructor() {
 		this.express = express()
+		this.router = express.Router()
 		this._middlewares()
 		this._routes()
 	}
@@ -20,9 +21,9 @@ class App {
 	}
 
 	_routes() {
-		this.express.use('/api', this.express)
+		this.express.use('/api', this.router)
 		fg.sync('**/src/main/routes/**routes.js')
-      .forEach((file) => require(`../../../ ${file}`)(this.express))
+      .forEach((file) => require(`../../../ ${file}`)(this.router))
 	}
 }
 
