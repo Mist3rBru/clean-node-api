@@ -63,7 +63,7 @@ const makeAuthUseCaseWithError = () => {
 	return new AuthUseCaseSpy()
 }
 
-describe('Login', () => {
+describe('Login Router', () => {
 	it('should return 400 when email is not provided', async () => {
 		const { sut } = makeSut()
 		const httpRequest = {
@@ -72,7 +72,7 @@ describe('Login', () => {
 			},
 		}
 		const HttpResponse = await sut.route(httpRequest)
-		expect(HttpResponse.statusCode).toBe(400)
+		expect(HttpResponse.status).toBe(400)
 		expect(HttpResponse.body.error).toBe(new MissingParamError('email').message)
 	})
 
@@ -85,7 +85,7 @@ describe('Login', () => {
 			},
 		}
 		const HttpResponse = await sut.route(httpRequest)
-		expect(HttpResponse.statusCode).toBe(400)
+		expect(HttpResponse.status).toBe(400)
 		expect(HttpResponse.body.error).toBe(new InvalidParamError('email').message)
 	})
 
@@ -98,7 +98,7 @@ describe('Login', () => {
 			},
 		}
 		const HttpResponse = await sut.route(httpRequest)
-		expect(HttpResponse.statusCode).toBe(400)
+		expect(HttpResponse.status).toBe(400)
 		expect(HttpResponse.body.error).toBe(
 			new MissingParamError('password').message
 		)
@@ -114,7 +114,7 @@ describe('Login', () => {
 			},
 		}
 		const HttpResponse = await sut.route(httpRequest)
-		expect(HttpResponse.statusCode).toBe(401)
+		expect(HttpResponse.status).toBe(401)
 		expect(HttpResponse.body.error).toBe(new UnauthorizedError().message)
 	})
 
@@ -127,7 +127,7 @@ describe('Login', () => {
 			},
 		}
 		const HttpResponse = await sut.route(httpRequest)
-		expect(HttpResponse.statusCode).toBe(200)
+		expect(HttpResponse.status).toBe(200)
 		expect(HttpResponse.body.accessToken).toBe(authUseCaseSpy.accessToken)
 	})
 
@@ -147,7 +147,7 @@ describe('Login', () => {
 				},
 			}
 			const httpResponse = await sut.route(httpRequest)
-			expect(httpResponse.statusCode).toBe(500)
+			expect(httpResponse.status).toBe(500)
 			expect(httpResponse.body.error).toBe(new ServerError().message)
 		}
 	})
@@ -171,7 +171,7 @@ describe('Login', () => {
 				},
 			}
 			const httpResponse = await sut.route(httpRequest)
-			expect(httpResponse.statusCode).toBe(500)
+			expect(httpResponse.status).toBe(500)
 			expect(httpResponse.body.error).toBe(new ServerError().message)
 		}
 	})
@@ -179,7 +179,7 @@ describe('Login', () => {
 	it('should return 500 if no httpRequest is provided', async () => {
 		const { sut } = makeSut()
 		const httpResponse = await sut.route()
-		expect(httpResponse.statusCode).toBe(500)
+		expect(httpResponse.status).toBe(500)
 		expect(httpResponse.body.error).toBe(new ServerError().message)
 	})
 })
