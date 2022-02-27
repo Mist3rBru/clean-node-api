@@ -7,10 +7,7 @@ module.exports = class FindUserByEmailRepository {
       throw new MissingParamError('email')
     }
     const userModel = await MongoHelper.getCollection('users')
-    const user = userModel.findOne(
-      { email },
-      { projection: { password_hash: 0 }}
-    )
+    const user = userModel.findOne({ email })
     return user
   }
 }
