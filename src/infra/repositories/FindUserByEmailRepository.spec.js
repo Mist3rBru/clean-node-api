@@ -27,4 +27,19 @@ describe('FindUserByEmailRepository', () => {
     const user = await sut.find('any-email')
     expect(user).toBeNull()
   })
+
+  it('should return user with no password_hash', async () => {
+    const fakeUser = await model.insertOne({
+      name: 'any-name',
+      email: 'any-email',
+      password_hash: 'any-hash',
+    })
+    const sut = makeSut()
+    const user = await sut.find('any-email')
+    expect(user).toEqual({
+      _id: fakeUser.insertedId,
+      name: 'any-name',
+      email: 'any-email',
+    })
+  })
 })
