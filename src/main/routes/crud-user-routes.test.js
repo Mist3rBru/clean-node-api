@@ -15,7 +15,7 @@ describe('CRUD User Routes', () => {
     await MongoHelper.disconnect()
   })
 
-  it('should return 200 if the user is registered', async () => {
+  it('should return 200 on create user', async () => {
     await request(app)
       .post('/api/user')
       .send({ 
@@ -24,12 +24,5 @@ describe('CRUD User Routes', () => {
         password: 'any-password',
       })
       .expect(200)
-  })
-
-  it('should return 400 if user name is not provided', async () => {
-    await request(app)
-      .post('/api/user')
-      .send()
-      .expect(400)
   })
 })
