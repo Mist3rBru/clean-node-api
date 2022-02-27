@@ -1,0 +1,5 @@
+describe('EncrypterGenerator', () => {
+  it('', async () => {
+    
+  })
+})
