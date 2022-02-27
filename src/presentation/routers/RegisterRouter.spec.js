@@ -59,4 +59,18 @@ describe('RegisterRouter', () => {
     expect(HttpResponse.body.error).toBe(new MissingParamError('email').message)
     expect(HttpResponse.status).toBe(400)
   })
+
+  it('should return 400 if invalid email is provided', async () => {
+    const { sut, emailValidatorSpy } = makeSut()
+    emailValidatorSpy.isEmailValid = false
+    const HttpRequest = {
+      body: {
+        name: 'any-name',
+        email: 'invalid-email'
+      }
+    }
+    const HttpResponse = await sut.route(HttpRequest)
+    expect(HttpResponse.body.error).toBe(new InvalidParamError('email').message)
+    expect(HttpResponse.status).toBe(400)
+  })
 })
