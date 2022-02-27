@@ -105,9 +105,7 @@ describe('RegisterRouter', () => {
 			email: 'any-email',
 		})
 		const HttpResponse = await sut.route(HttpRequest)
-		expect(HttpResponse.body.error).toBe(
-			new MissingParamError('password').message
-		)
+		expect(HttpResponse.body.error).toBe(new MissingParamError('password').message)
 		expect(HttpResponse.status).toBe(400)
 	})
 
@@ -143,4 +141,30 @@ describe('RegisterRouter', () => {
 		const HttpResponse = await sut.route(HttpRequest)
 		expect(HttpResponse.body).toBe('any-user')
 	})
+
+	it('should return 500 if any dependency is not provided', async () => {
+    const emailValidator = makeEmailValidator()
+    const invalid = {}
+    const suts = [].concat(
+      new RegisterRouter(),
+      new RegisterRouter({}),
+      new RegisterRouter({ 
+        emailValidator: invalid, 
+      }),
+      new RegisterRouter({ 
+        emailValidator, 
+        registerUseCase: invalid,
+      }),
+    )
+    for(let sut of suts) {
+      const HttpRequest = makeHttpRequest({
+        name: 'any_name',
+        email: 'any-email',
+        password: 'any_password',
+      })
+      const HttpResponse = await sut.route(HttpRequest)
+      expect(HttpResponse.body.error).toBe(new ServerError().message)
+      expect(HttpResponse.status).toBe(500)
+    }
+    })
 })
