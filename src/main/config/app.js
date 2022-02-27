@@ -3,6 +3,7 @@ const jsonParser = require('../middlewares/json-parser')
 const contentType = require('../middlewares/content-type')
 
 const express = require('express')
+const path = require('path')
 const fg = require('fast-glob')
 
 class App {
@@ -22,8 +23,10 @@ class App {
 
 	_routes() {
 		this.express.use('/api', this.router)
-		fg.sync('**/src/main/routes/**routes.js')
-      .forEach((file) => require(`../../../ ${file}`)(this.router))
+		const dir = path.resolve(__dirname, '../../../') + '/'
+		fg.sync('**/src/main/routes/**routes.js').forEach((file) =>
+			require(dir + file)(this.router)
+		)
 	}
 }
 
