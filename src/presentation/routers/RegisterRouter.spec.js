@@ -87,4 +87,17 @@ describe('RegisterRouter', () => {
     expect(HttpResponse.body.error).toBe(new MissingParamError('password').message)
     expect(HttpResponse.status).toBe(400)
   })
+
+  it('should call emailValidator with correct values', async () => {
+    const { sut, emailValidatorSpy } = makeSut()
+    const HttpRequest = {
+      body: {
+        name: 'any-name',
+        email: 'any-email',
+        password: 'any_password'
+      }
+    }
+    await sut.route(HttpRequest)
+    expect(emailValidatorSpy.email).toBe('any-email')
+  })
 })
