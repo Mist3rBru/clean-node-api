@@ -16,13 +16,15 @@ describe('CRUD User Routes', () => {
   })
 
   it('should return 200 on create user', async () => {
-    await request(app)
-      .post('/api/user')
-      .send({ 
-        name: 'any-name',
-        email: 'any-email@example.com' ,
-        password: 'any-password',
-      })
-      .expect(200)
+    const user = { 
+      name: 'any-name',
+      email: 'any-email@example.com' ,
+      password: 'any-password',
+    }
+    const res = await request(app).post('/api/user').send(user)
+    const data = await model.findOne({ email: 'any-email@example.com'})
+    expect(res.status).toBe(200)
+    expect(data.email).toBe(user.email)
+    expect(data.password).toBeUndefined()
   })
 })
