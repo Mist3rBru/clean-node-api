@@ -6,6 +6,6 @@ module.exports = class EncrypterGenerator {
     if(!value) { 
       throw new MissingParamError('value')
     }
-    await bcrypt.hash(value, 8)
+    return await bcrypt.hash(value, 8)
   }
 }

@@ -1,9 +1,10 @@
 jest.mock('bcrypt', () => ({
-  hash: 'any-hash',
+  hashed_value: 'any-hash',
 
-  async hash (value) {
+  async hash (value, salt) {
     this.value = value
-    return this.hash
+    this.salt = salt
+    return this.hashed_value
   }
 }))
 
@@ -27,5 +28,12 @@ describe('EncrypterGenerator', () => {
     const sut = makeSut()
     await sut.generate('any-value')
     expect(bcrypt.value).toBe('any-value')
+    expect(bcrypt.salt).toBe(8)
+  })
+
+  it('should return hash if valid params are provided', async () => {
+    const sut = makeSut()
+    const hash = await sut.generate('any-value')
+    expect(hash).toBe('any-hash')
   })
 })
