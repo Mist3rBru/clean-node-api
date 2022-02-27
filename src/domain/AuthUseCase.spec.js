@@ -41,7 +41,7 @@ const makeFindUserByEmailRepositoryWithError = () => {
 
 const makeEncrypter = () => {
   class EncrypterSpy {
-    async compare(value, hash) {
+    async validate(value, hash) {
       this.value = value
       this.hash = hash
       return this.isValid
@@ -54,7 +54,7 @@ const makeEncrypter = () => {
 
 const makeEncrypterWithError = () => {
   class EncrypterSpy {
-    async compare() { throw new Error() }
+    async validate() { throw new Error() }
   }
   return new EncrypterSpy()
 }
