@@ -2,7 +2,7 @@ const MissingParamError = require('../utils/errors/MissingParamError')
 const AuthUseCase = require('./AuthUseCase')
 
 const makeSut = () => {
-	const findUserByEmailRepositorySpy = makeFindUserByEmailRepositorysitory()
+	const findUserByEmailRepositorySpy = makeFindUserByEmailRepository()
 	const encrypterSpy = makeEncrypter()
   const tokenGeneratorSpy = makeTokenGenerator()
 	const sut = new AuthUseCase({
@@ -18,7 +18,7 @@ const makeSut = () => {
 	}
 }
 
-const makeFindUserByEmailRepositorysitory = () => {
+const makeFindUserByEmailRepository = () => {
 	class FindUserByEmailRepositorySpy {
 		async find(email) {
 			this.email = email
@@ -27,7 +27,7 @@ const makeFindUserByEmailRepositorysitory = () => {
 	}
 	const findUserByEmailRepositorySpy = new FindUserByEmailRepositorySpy()
 	findUserByEmailRepositorySpy.user = { 
-    id: 'any-id',
+    _id: 'any-id',
     password_hash: 'any-hash',
   }
 	return findUserByEmailRepositorySpy
@@ -105,13 +105,7 @@ describe('AuthUseCase', () => {
 		await sut.auth('any-email', 'any-password')
 		expect(tokenGeneratorSpy.payload).toBe('any-id')
 	})
-
-	it('should call token generator with correct values', async () => {
-		const { sut, tokenGeneratorSpy } = makeSut()
-		await sut.auth('any-email', 'any-password')
-		expect(tokenGeneratorSpy.payload).toBe('any-id')
-	})
-
+  
 	it('should return access token when valid params are provided', async () => {
 		const { sut } = makeSut()
 		const accessToken = await sut.auth('any-email', 'any-password')
@@ -134,7 +128,7 @@ describe('AuthUseCase', () => {
 
 	it('should throw if any dependency is not provided', async () => {
     const invalid = {}
-    const findUserByEmailRepository = makeFindUserByEmailRepositorysitory()
+    const findUserByEmailRepository = makeFindUserByEmailRepository()
     const encrypter = makeEncrypter()
     const suts = [].concat(
       new AuthUseCase(),
@@ -159,7 +153,7 @@ describe('AuthUseCase', () => {
 	})
 
 	it('should throw if any dependency throws', async () => {
-    const findUserByEmailRepository = makeFindUserByEmailRepositorysitory()
+    const findUserByEmailRepository = makeFindUserByEmailRepository()
     const encrypter = makeEncrypter()
     const suts = [].concat(
       new AuthUseCase({
