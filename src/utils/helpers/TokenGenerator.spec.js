@@ -14,27 +14,26 @@ const MissingParamError = require('../errors/MissingParamError')
 const jwt = require('jsonwebtoken')
 
 const makeSut = () => {
-	return new TokenGenerator()
+	return new TokenGenerator('any-secret')
 }
 
 describe('TokenGenerator', () => {
 	it('should throws if any param is not provided', () => {
-		const sut = makeSut()
+		const sut = new TokenGenerator()
 		expect(sut.generate()).rejects.toThrow(new MissingParamError('payload'))
 		expect(sut.generate('any-payload')).rejects.toThrow(new MissingParamError('secret'))
 	})
 
 	it('should call jwt sign with correct values', async () => {
 		const sut = makeSut()
-		await sut.generate('any-payload', 'any-secret')
-		expect(jwt.payload).toBe('any-payload')
+		await sut.generate('any-payload')
+		expect(jwt.payload).toEqual({ id: 'any-payload'})
 		expect(jwt.secret).toBe('any-secret')
-		expect(jwt.options).toEqual({ expiresIn: '15m' })
 	})
 
 	it('should return token if valid params are provided', async () => {
 		const sut = makeSut()
-		const token = await sut.generate('any-payload', 'any-secret')
+		const token = await sut.generate('any-payload')
 		expect(token).toBe('any-token')
 	})
 
