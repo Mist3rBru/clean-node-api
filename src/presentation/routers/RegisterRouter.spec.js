@@ -46,4 +46,17 @@ describe('RegisterRouter', () => {
     expect(HttpResponse.body.error).toBe(new MissingParamError('name').message)
     expect(HttpResponse.status).toBe(400)
   })
+
+  it('should return 400 if no email is provided', async () => {
+    const { sut } = makeSut()
+    const HttpRequest = {
+      body: {
+        name: 'any-name',
+        email: null
+      }
+    }
+    const HttpResponse = await sut.route(HttpRequest)
+    expect(HttpResponse.body.error).toBe(new MissingParamError('email').message)
+    expect(HttpResponse.status).toBe(400)
+  })
 })
