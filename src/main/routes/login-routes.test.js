@@ -4,12 +4,11 @@ const app = require('../config/app')
 const env = require('../config/env')
 
 const { hashSync } = require('bcrypt')
-const hashedPassword = hashSync('any-password', 8)
 const user = {
-  name: 'any-name',
-  email: 'any-email@example.com',
-  password: 'any-password',
-  password_hash: hashedPassword,
+  name: 'valid-name',
+  email: 'valid-email@example.com',
+  password: 'valid-password',
+  password_hash: hashSync('valid-password', 8),
 }
 let model
 
@@ -33,13 +32,21 @@ describe('Login Routes', () => {
   })
 
   it('should return 401 if invalid credentials are provided', async () => {
-    const invalidCredentials = { 
-      email: 'invalid-email@example.com',
-      password: 'invalid-password'
-    }
     await request(app)
       .post('/api/login')
-      .send(invalidCredentials)
+      .send({
+        email: 'invalid-email@example.com',
+        password: 'valid-password'
+      })
       .expect(401)
+
+    await request(app)
+      .post('/api/login')
+      .send({
+        email: 'valid-email@example.com',
+        password: 'invalid-password'
+      })
+      .expect(401)
+
   })
 })
