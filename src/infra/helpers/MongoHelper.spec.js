@@ -17,6 +17,10 @@ const sut = require('./MongoHelper')
 const mongoose = require('mongoose')
 
 describe('MongoHelper', () => {
+	afterAll(async () => {
+		await sut.disconnect()
+	})
+
 	it('should call mongoose createConnection with correct values', async () => {
 		await sut.connect('any-uri')
 		expect(mongoose.uri).toBe('any-uri')
