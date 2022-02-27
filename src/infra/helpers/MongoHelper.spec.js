@@ -49,6 +49,11 @@ describe('MongoHelper', () => {
     expect(sut.db).toBeTruthy()
   })
 
+  it('should throw if no collection name is provided', async () => {
+    const promise = sut.getCollection()
+    expect(promise).rejects.toThrow(new MissingParamError('name'))
+  })
+
   it('should return collection form database', async () => {
     const collection = await sut.getCollection('any-collection')
     expect(collection).toBe('any-collection')

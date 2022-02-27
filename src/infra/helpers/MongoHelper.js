@@ -17,6 +17,9 @@ module.exports = {
   },
 
   async getCollection (name) {
+    if (!name) {
+      throw new MissingParamError('name')
+    }
     if (!this.db) {
       await this.connect(this.uri)
     }
