@@ -15,7 +15,14 @@ describe('CRUD User Routes', () => {
     await MongoHelper.disconnect()
   })
 
-  it('', async () => {
-    
+  it('should return 200 on create user', async () => {
+    await request(app)
+      .post('/api/user')
+      .send({ 
+        name: 'any-name',
+        email: 'any-email@example.com' ,
+        password: 'any-password',
+      })
+      .expect(200)
   })
 })
