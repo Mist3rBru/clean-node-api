@@ -27,6 +27,13 @@ const makeEncrypterGenerator = () => {
   return encrypterGeneratorSpy
 }
 
+const makeEncrypterGeneratorWithError = () => {
+  class EncrypterGeneratorSpy {
+    async generate(password) { throw new Error() }
+  }
+  return new EncrypterGeneratorSpy
+}
+
 const makeRegisterUserRepository = () => {
   class RegisterUserRepositorySpy {
     async register(data) {
@@ -37,6 +44,13 @@ const makeRegisterUserRepository = () => {
   const registerUserRepositorySpy = new RegisterUserRepositorySpy()
   registerUserRepositorySpy.user = 'any-user'
   return registerUserRepositorySpy
+}
+
+const makeRegisterUserRepositoryWithError = () => {
+  class RegisterUserRepositorySpy {
+    async register(data) { throw new Error() }
+  }
+  return new RegisterUserRepositorySpy()
 }
 
 describe('RegisterUseCase', () => {
@@ -82,6 +96,23 @@ describe('RegisterUseCase', () => {
       new RegisterUseCase({
         encrypterGenerator,
         registerUserRepository: invalid
+      }),
+    )
+    for(let sut of suts) {
+      const promise = sut.register({ password: 'any-password'})
+      expect(promise).rejects.toThrow()
+    }
+  })
+
+  it('should throw if any dependency is not provided', async () => {
+    const encrypterGenerator = makeEncrypterGenerator()
+    const suts = [].concat(
+      new RegisterUseCase({
+        encrypterGenerator: makeEncrypterGeneratorWithError(),
+      }),
+      new RegisterUseCase({
+        encrypterGenerator,
+        registerUserRepository: makeRegisterUserRepositoryWithError()
       }),
     )
     for(let sut of suts) {
