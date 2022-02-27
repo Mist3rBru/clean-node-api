@@ -7,7 +7,7 @@ const RegisterRouter = require('./RegisterRouter')
 
 const makeHttpRequest = (body) => {
 	return {
-    body
+		body,
 	}
 }
 
@@ -78,9 +78,9 @@ describe('RegisterRouter', () => {
 
 	it('should return 400 if no email is provided', async () => {
 		const { sut } = makeSut()
-		const HttpRequest = makeHttpRequest({ 
-      name: 'any_name'
-    })
+		const HttpRequest = makeHttpRequest({
+			name: 'any_name',
+		})
 		const HttpResponse = await sut.route(HttpRequest)
 		expect(HttpResponse.body.error).toBe(new MissingParamError('email').message)
 		expect(HttpResponse.status).toBe(400)
@@ -116,7 +116,7 @@ describe('RegisterRouter', () => {
 		const HttpRequest = makeHttpRequest({
 			name: 'any_name',
 			email: 'any-email',
-      password: 'any_password'
+			password: 'any_password',
 		})
 		await sut.route(HttpRequest)
 		expect(emailValidatorSpy.email).toBe('any-email')
@@ -127,9 +127,20 @@ describe('RegisterRouter', () => {
 		const HttpRequest = makeHttpRequest({
 			name: 'any_name',
 			email: 'any-email',
-      password: 'any_password'
+			password: 'any_password',
 		})
 		await sut.route(HttpRequest)
 		expect(registerUseCaseSpy.body).toEqual(HttpRequest.body)
+	})
+
+	it('should return 200  when user is registered', async () => {
+		const { sut } = makeSut()
+		const HttpRequest = makeHttpRequest({
+			name: 'any_name',
+			email: 'any-email',
+			password: 'any_password',
+		})
+		const HttpResponse = await sut.route(HttpRequest)
+		expect(HttpResponse.body).toBe('any-user')
 	})
 })
