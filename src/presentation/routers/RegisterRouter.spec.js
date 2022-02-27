@@ -166,5 +166,28 @@ describe('RegisterRouter', () => {
       expect(HttpResponse.body.error).toBe(new ServerError().message)
       expect(HttpResponse.status).toBe(500)
     }
-    })
+  })
+
+	it('should return 500 if any dependency throws', async () => {
+    const emailValidator = makeEmailValidator()
+    const suts = [].concat(
+      new RegisterRouter({ 
+        emailValidator: makeEmailValidatorWithError(), 
+      }),
+      new RegisterRouter({ 
+        emailValidator, 
+        registerUseCase: makeRegisterUseCaseWithError(),
+      }),
+    )
+    for(let sut of suts) {
+      const HttpRequest = makeHttpRequest({
+        name: 'any_name',
+        email: 'any-email',
+        password: 'any_password',
+      })
+      const HttpResponse = await sut.route(HttpRequest)
+      expect(HttpResponse.body.error).toBe(new ServerError().message)
+      expect(HttpResponse.status).toBe(500)
+    }
+  })
 })
