@@ -1,3 +1,4 @@
+const MissingParamError = require('../../utils/errors/MissingParamError')
 const RegisterUserRepository = require('./RegisterUserRepository')
 
 const makeSut = () => {
@@ -6,7 +7,9 @@ const makeSut = () => {
 }
 
 describe('RegisterUserRepository', () => {
-  it('', async () => {
-    
+  it('should throw if no data is provided', async () => {
+    const sut = makeSut()
+    const promise = sut.register()
+    expect(promise).rejects.toThrow(new MissingParamError('data'))
   })
 })
