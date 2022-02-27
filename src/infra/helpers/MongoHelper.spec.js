@@ -18,10 +18,6 @@ const mongoose = require('mongoose')
 const MissingParamError = require('../../utils/errors/MissingParamError')
 
 describe('MongoHelper', () => {
-	afterAll(async () => {
-		await sut.disconnect()
-	})
-
 	it('should throw if no uri is provided', async () => {
 		const promise =  sut.connect()
 		expect(promise).rejects.toThrow(new MissingParamError('uri'))
