@@ -132,8 +132,13 @@ describe('Login', () => {
 	})
 
 	test('should throw if any dependency was not provided', async () => {
-		const authUseCase = makeAuthUseCase()
-		const suts = [].concat(new LoginRouter(), new LoginRouter({ authUseCase }))
+		const emailValidator = makeEmailValidator()
+		const suts = [].concat(
+			new LoginRouter(), 
+			new LoginRouter({}),
+			new LoginRouter({ emailValidator })
+		)
+
 		for (const sut of suts) {
 			const httpRequest = {
 				body: {
