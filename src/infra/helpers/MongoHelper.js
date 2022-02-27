@@ -17,7 +17,6 @@ module.exports = {
   },
 
   async getCollection (name) {
-    console.log(this.db, this.uri)
     if (!this.db) {
       await this.connect(this.uri)
     }
