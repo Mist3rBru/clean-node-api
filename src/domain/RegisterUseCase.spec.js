@@ -46,6 +46,12 @@ describe('RegisterUseCase', () => {
     expect(promise).rejects.toThrow(new MissingParamError('body'))
   })
 
+  it('should throw if no password is provided on body', async () => {
+    const { sut } = makeSut()
+    const promise = sut.register({})
+    expect(promise).rejects.toThrow(new MissingParamError('password'))
+  })
+
   it('should call encrypterGenerator with correct values', async () => {
     const { sut, encrypterGeneratorSpy } = makeSut()
     await sut.register({ password: 'any-password'})

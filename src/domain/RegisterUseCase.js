@@ -11,8 +11,12 @@ module.exports = class RegisterUseCase {
       throw new MissingParamError('body')
     }
     const { password, ...data } = body
+    if(!password) {
+      throw new MissingParamError('password')
+    }
     const hash = await this.encrypterGenerator.generate(password)
     data.password_hash = hash
-    await this.registerUserRepository.register(data)
+    const user = await this.registerUserRepository.register(data)
+    return user
   }
 }
