@@ -1,11 +1,12 @@
 const MissingParamError = require('../utils/errors/MissingParamError')
+const MongoHelper = require('../infra/helpers/MongoHelper')
 const app = require('./config/app')
 const env = require('./config/env')
-const host = env.APP_HOST
-const port = env.APP_PORT || 3000
+const port = env.APP_PORT
 
-app.listen(port, (error) => {
-  if(error) throw new Error(error.message)
-	if (!port) throw new MissingParamError('port')
-  console.log(`server is running on ${host}:${port}`)
+MongoHelper.connect(env.MONGO_URL)
+  .then( console.log('MongoDB is connected'))
+
+app.listen(port, () => {
+	console.log(`Server is running on localhost:${port}`)
 })
