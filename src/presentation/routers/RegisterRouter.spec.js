@@ -73,4 +73,18 @@ describe('RegisterRouter', () => {
     expect(HttpResponse.body.error).toBe(new InvalidParamError('email').message)
     expect(HttpResponse.status).toBe(400)
   })
+
+  it('should return 400 if no password is provided', async () => {
+    const { sut } = makeSut()
+    const HttpRequest = {
+      body: {
+        name: 'any-name',
+        email: 'any-email',
+        password: null
+      }
+    }
+    const HttpResponse = await sut.route(HttpRequest)
+    expect(HttpResponse.body.error).toBe(new MissingParamError('password').message)
+    expect(HttpResponse.status).toBe(400)
+  })
 })
