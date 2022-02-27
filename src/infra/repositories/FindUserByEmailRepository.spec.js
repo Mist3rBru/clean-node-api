@@ -42,4 +42,10 @@ describe('FindUserByEmailRepository', () => {
       email: 'any-email',
     })
   })
+
+  it('should throw if no email is provided', async () => {
+    const sut = makeSut()
+    const promise = sut.find()
+    expect(promise).rejects.toThrow(new MissingParamError('email'))
+  })
 })
