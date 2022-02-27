@@ -1,5 +1,5 @@
 const { MissingParamError } = require('../utils/errors')
-const RegisterUseCase = require('./RegisterUseCase')
+const RegisterUseCase = require('./RegisterUserUseCase')
 
 const makeSut = () => {
   const encrypterGeneratorSpy = makeEncrypterGenerator()
@@ -62,5 +62,11 @@ describe('RegisterUseCase', () => {
     const { sut, registerUserRepositorySpy } = makeSut()
     await sut.register({ password: 'any-password'})
     expect(registerUserRepositorySpy.data).toEqual({ password_hash: 'any-hash'})
+  })
+
+  it('should return user if valid params are provided', async () => {
+    const { sut } = makeSut()
+    const user = await sut.register({ password: 'any-password'})
+    expect(user).toBe('any-user')
   })
 })

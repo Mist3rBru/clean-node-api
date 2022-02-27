@@ -3,7 +3,7 @@ const {
 	InvalidParamError,
 	ServerError,
 } = require('../../utils/errors')
-const RegisterRouter = require('./RegisterRouter')
+const RegisterUserRouter = require('./RegisterUserRouter')
 
 const makeHttpRequest = (body) => {
 	return {
@@ -12,16 +12,16 @@ const makeHttpRequest = (body) => {
 }
 
 const makeSut = () => {
-	const registerUseCaseSpy = makeRegisterUseCase()
+	const registerUserUseCaseSpy = makeRegisterUserUseCase()
 	const emailValidatorSpy = makeEmailValidator()
-	const sut = new RegisterRouter({
+	const sut = new RegisterUserRouter({
 		emailValidator: emailValidatorSpy,
-		registerUseCase: registerUseCaseSpy,
+		registerUserUseCase: registerUserUseCaseSpy,
 	})
 	return {
 		sut,
 		emailValidatorSpy,
-		registerUseCaseSpy,
+		registerUserUseCaseSpy,
 	}
 }
 
@@ -46,16 +46,16 @@ const makeEmailValidatorWithError = () => {
 	return new EmailValidatorSpy()
 }
 
-const makeRegisterUseCase = () => {
-	class RegisterUseCaseSpy {
-		register(body) {
+const makeRegisterUserUseCase = () => {
+	class RegisterUserUseCaseSpy {
+		async register(body) {
 			this.body = body
 			return this.user
 		}
 	}
-	const registerUseCaseSpy = new RegisterUseCaseSpy()
-	registerUseCaseSpy.user = 'any-user'
-	return registerUseCaseSpy
+	const registerUserUseCaseSpy = new RegisterUserUseCaseSpy()
+	registerUserUseCaseSpy.user = 'any-user'
+	return registerUserUseCaseSpy
 }
 
 const makeRegisterUseCaseWithError = () => {
@@ -67,7 +67,7 @@ const makeRegisterUseCaseWithError = () => {
 	return new RegisterUseCaseSpy()
 }
 
-describe('RegisterRouter', () => {
+describe('RegisterUserRouter', () => {
 	it('should return 400 if no name is provided', async () => {
 		const { sut } = makeSut()
 		const HttpRequest = makeHttpRequest({})
@@ -120,15 +120,15 @@ describe('RegisterRouter', () => {
 		expect(emailValidatorSpy.email).toBe('any-email')
 	})
 
-	it('should call registerUseCase with correct values', async () => {
-		const { sut, registerUseCaseSpy } = makeSut()
+	it('should call registerUserUseCase with correct values', async () => {
+		const { sut, registerUserUseCaseSpy } = makeSut()
 		const HttpRequest = makeHttpRequest({
 			name: 'any_name',
 			email: 'any-email',
 			password: 'any_password',
 		})
 		await sut.route(HttpRequest)
-		expect(registerUseCaseSpy.body).toEqual(HttpRequest.body)
+		expect(registerUserUseCaseSpy.body).toEqual(HttpRequest.body)
 	})
 
 	it('should return 200  when user is registered', async () => {
@@ -146,14 +146,14 @@ describe('RegisterRouter', () => {
     const emailValidator = makeEmailValidator()
     const invalid = {}
     const suts = [].concat(
-      new RegisterRouter(),
-      new RegisterRouter({}),
-      new RegisterRouter({ 
+      new RegisterUserRouter(),
+      new RegisterUserRouter({}),
+      new RegisterUserRouter({ 
         emailValidator: invalid, 
       }),
-      new RegisterRouter({ 
+      new RegisterUserRouter({ 
         emailValidator, 
-        registerUseCase: invalid,
+        registerUserUseCase: invalid,
       }),
     )
     for(let sut of suts) {
@@ -171,12 +171,12 @@ describe('RegisterRouter', () => {
 	it('should return 500 if any dependency throws', async () => {
     const emailValidator = makeEmailValidator()
     const suts = [].concat(
-      new RegisterRouter({ 
+      new RegisterUserRouter({ 
         emailValidator: makeEmailValidatorWithError(), 
       }),
-      new RegisterRouter({ 
+      new RegisterUserRouter({ 
         emailValidator, 
-        registerUseCase: makeRegisterUseCaseWithError(),
+        registerUserUseCase: makeRegisterUseCaseWithError(),
       }),
     )
     for(let sut of suts) {

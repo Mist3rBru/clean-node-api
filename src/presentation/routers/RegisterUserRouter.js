@@ -1,10 +1,10 @@
 const HttpResponse = require('../helpers/HttpResponse')
 const { MissingParamError, InvalidParamError } = require('../../utils/errors')
 
-module.exports = class RegisterRouter {
-	constructor({ emailValidator, registerUseCase } = {}) {
+module.exports = class RegisterUserRouter {
+	constructor({ emailValidator, registerUserUseCase } = {}) {
 		this.emailValidator = emailValidator
-		this.registerUseCase = registerUseCase
+		this.registerUserUseCase = registerUserUseCase
 	}
 
 	async route(HttpRequest) {
@@ -22,7 +22,7 @@ module.exports = class RegisterRouter {
 			if (!password) {
 				return HttpResponse.badRequest(new MissingParamError('password'))
 			}
-			const user = await this.registerUseCase.register(HttpRequest.body)
+			const user = await this.registerUserUseCase.register(HttpRequest.body)
 			return HttpResponse.ok(user)
 		} catch (error) {
 			return HttpResponse.serverError()
