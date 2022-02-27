@@ -69,4 +69,24 @@ describe('RegisterUseCase', () => {
     const user = await sut.register({ password: 'any-password'})
     expect(user).toBe('any-user')
   })
+
+  it('should throw if any dependency is not provided', async () => {
+    const encrypterGenerator = makeEncrypterGenerator()
+    const invalid = {}
+    const suts = [].concat(
+      new RegisterUseCase(),
+      new RegisterUseCase({}),
+      new RegisterUseCase({
+        encrypterGenerator: invalid,
+      }),
+      new RegisterUseCase({
+        encrypterGenerator,
+        registerUserRepository: invalid
+      }),
+    )
+    for(let sut of suts) {
+      const promise = sut.register({ password: 'any-password'})
+      expect(promise).rejects.toThrow()
+    }
+  })
 })
