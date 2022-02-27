@@ -28,7 +28,7 @@ describe('FindUserByEmailRepository', () => {
     expect(user).toBeNull()
   })
 
-  it('should return user with no password_hash', async () => {
+  it('should return user if valid params are provided', async () => {
     const fakeUser = await model.insertOne({
       name: 'any-name',
       email: 'any-email',
