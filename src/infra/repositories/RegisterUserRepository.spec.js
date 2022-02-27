@@ -20,6 +20,7 @@ describe('RegisterUserRepository', () => {
   })
   
   afterAll(async () => {
+    await model.deleteMany()
     await MongoHelper.disconnect()
   })
 
@@ -33,5 +34,11 @@ describe('RegisterUserRepository', () => {
     const sut = makeSut()
     const promise = sut.register({})
     expect(promise).rejects.toThrow(new MissingParamError('email'))
+  })
+
+  it('should return user when it is registered', async () => {
+    const sut = makeSut()
+    const user = await sut.register({email: 'any-email'})
+    expect(user.email).toBe('any-email')
   })
 })
