@@ -121,4 +121,15 @@ describe('RegisterRouter', () => {
 		await sut.route(HttpRequest)
 		expect(emailValidatorSpy.email).toBe('any-email')
 	})
+
+	it('should call registerUseCase with correct values', async () => {
+		const { sut, registerUseCaseSpy } = makeSut()
+		const HttpRequest = makeHttpRequest({
+			name: 'any_name',
+			email: 'any-email',
+      password: 'any_password'
+		})
+		await sut.route(HttpRequest)
+		expect(registerUseCaseSpy.body).toEqual(HttpRequest.body)
+	})
 })
