@@ -40,6 +40,7 @@ describe('FindUserByEmailRepository', () => {
       _id: fakeUser.insertedId,
       name: 'any-name',
       email: 'any-email',
+      password_hash: 'any-hash',
     })
   })
 
