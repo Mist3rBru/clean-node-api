@@ -190,4 +190,11 @@ describe('RegisterRouter', () => {
       expect(HttpResponse.status).toBe(500)
     }
   })
+
+  it('should return 500 if no HttpRequest is provided', async () => {
+    const { sut } = makeSut()
+    const HttpResponse = await sut.route()
+    expect(HttpResponse.body.error).toBe(new ServerError().message)
+    expect(HttpResponse.status).toBe(500)
+  })
 })
