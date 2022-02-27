@@ -3,14 +3,14 @@ const { UnauthorizedError, ServerError } = require('../../utils/errors')
 module.exports = class HttpResponse {
   static ok(body) {
     return {
-      statusCode: 200,
+      status: 200,
       body: body
     }
   }
 
   static badRequest(error) {
     return {
-      statusCode: 400,
+      status: 400,
       body: {
         error: error.message
       }
@@ -19,7 +19,7 @@ module.exports = class HttpResponse {
 
   static unauthorizedError() {
     return {
-      statusCode: 401,
+      status: 401,
       body: {
         error: new UnauthorizedError().message
       }
@@ -28,7 +28,7 @@ module.exports = class HttpResponse {
 
   static serverError() {
     return {
-      statusCode: 500,
+      status: 500,
       body: {
         error: new ServerError().message
       }
