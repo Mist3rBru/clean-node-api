@@ -1,4 +1,3 @@
-const MissingParamError = require('../utils/errors/MissingParamError')
 const MongoHelper = require('../infra/helpers/MongoHelper')
 const app = require('./config/app')
 const env = require('./config/env')
