@@ -6,7 +6,8 @@
   "license": "ISC",
   "main": "src/main/index.js",
   "scripts": {
-    "start": "node src/main/index.js",
+    "start": "node src/main/server.js",
+    "dev": "nodemon src/main/server.js",
     "test": "jest --colors --noStackTrace --passWithNoTests --runInBand",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "test:int": "npm test -- --watch -c jest-integration-config.js",
@@ -14,7 +15,6 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
-    "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "fast-glob": "^3.2.11",
     "jsonwebtoken": "^8.5.1",
@@ -23,6 +23,8 @@
   },
   "devDependencies": {
     "eslint": "^8.10.0",
-    "jest": "^27.5.1"
+    "jest": "^27.5.1",
+    "nodemon": "^2.0.15",
+    "supertest": "^6.2.2"
   }
 }
