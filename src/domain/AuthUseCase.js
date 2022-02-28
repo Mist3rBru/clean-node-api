@@ -7,7 +7,7 @@ module.exports = class AuthUseCase {
     this.tokenGenerator = tokenGenerator
 	}
 
-	async auth(email, password) {
+	async auth({ email, password } = {}) {
 		if (!email) {
 			throw new MissingParamError('email')
 		}
