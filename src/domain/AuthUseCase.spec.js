@@ -3,17 +3,17 @@ const AuthUseCase = require('./AuthUseCase')
 
 const makeSut = () => {
 	const findUserByEmailRepositorySpy = makeFindUserByEmailRepository()
-	const encrypterSpy = makeEncrypter()
+	const encrypterValidatorSpy = makeEncrypter()
   const tokenGeneratorSpy = makeTokenGenerator()
 	const sut = new AuthUseCase({
 		findUserByEmailRepository: findUserByEmailRepositorySpy,
-    encrypter: encrypterSpy,
+    encrypterValidator: encrypterValidatorSpy,
     tokenGenerator: tokenGeneratorSpy
 	})
 	return {
 		sut,
 		findUserByEmailRepositorySpy,
-    encrypterSpy,
+    encrypterValidatorSpy,
     tokenGeneratorSpy
 	}
 }
@@ -40,23 +40,23 @@ const makeFindUserByEmailRepositoryWithError = () => {
 }
 
 const makeEncrypter = () => {
-  class EncrypterSpy {
+  class EncrypterValidatorSpy {
     async validate(value, hash) {
       this.value = value
       this.hash = hash
       return this.isValid
     }
   }
-  const encrypterSpy = new EncrypterSpy()
-  encrypterSpy.isValid = true
-  return encrypterSpy
+  const encrypterValidatorSpy = new EncrypterValidatorSpy()
+  encrypterValidatorSpy.isValid = true
+  return encrypterValidatorSpy
 }
 
 const makeEncrypterWithError = () => {
-  class EncrypterSpy {
+  class EncrypterValidatorSpy {
     async validate() { throw new Error() }
   }
-  return new EncrypterSpy()
+  return new EncrypterValidatorSpy()
 }
 
 const makeTokenGenerator = () => {
@@ -94,10 +94,10 @@ describe('AuthUseCase', () => {
 	})
 
 	it('should call encrypter with correct values', async () => {
-		const { sut, encrypterSpy } = makeSut()
+		const { sut, encrypterValidatorSpy } = makeSut()
 		await sut.auth('any-email', 'any-password')
-		expect(encrypterSpy.value).toBe('any-password')
-		expect(encrypterSpy.hash).toBe('any-hash')
+		expect(encrypterValidatorSpy.value).toBe('any-password')
+		expect(encrypterValidatorSpy.hash).toBe('any-hash')
 	})
 
 	it('should call token generator with correct values', async () => {
@@ -120,8 +120,8 @@ describe('AuthUseCase', () => {
 	})
 
 	it('should return null when invalid password is provided', async () => {
-		const { sut, encrypterSpy } = makeSut()
-    encrypterSpy.isValid = false
+		const { sut, encrypterValidatorSpy } = makeSut()
+    encrypterValidatorSpy.isValid = false
 		const accessToken = await sut.auth('any-email', 'invalid-password')
 		expect(accessToken).toBeNull()
 	})
