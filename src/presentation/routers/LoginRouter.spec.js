@@ -3,7 +3,6 @@ const {
 	MissingParamError,
 	InvalidParamError,
 	UnauthorizedError,
-	ServerError,
 } = require('../../utils/errors')
 
 const makeSut = () => {
@@ -148,7 +147,6 @@ describe('Login Router', () => {
 			}
 			const httpResponse = await sut.route(httpRequest)
 			expect(httpResponse.status).toBe(500)
-			expect(httpResponse.body.error).toBe(new ServerError().message)
 		}
 	})
 
@@ -172,7 +170,6 @@ describe('Login Router', () => {
 			}
 			const httpResponse = await sut.route(httpRequest)
 			expect(httpResponse.status).toBe(500)
-			expect(httpResponse.body.error).toBe(new ServerError().message)
 		}
 	})
 
@@ -180,6 +177,5 @@ describe('Login Router', () => {
 		const { sut } = makeSut()
 		const httpResponse = await sut.route()
 		expect(httpResponse.status).toBe(500)
-		expect(httpResponse.body.error).toBe(new ServerError().message)
 	})
 })
