@@ -1,7 +1,7 @@
 # **Clean-Node-Api**
 APi created for study purpose on TDD and Clean Architecture
 
-> ## Features
+> ## API Features
 * Register
 * Login
 
@@ -39,7 +39,7 @@ APi created for study purpose on TDD and Clean Architecture
 * Nodemon
 * Fast-Glob
 
-> ## Features de Testes
+> ## Features of Tests
 * Unit Tests
 * Integration Tests
 * Coverage Tests
