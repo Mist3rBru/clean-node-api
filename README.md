@@ -39,7 +39,7 @@ APi created for study purpose on TDD and Clean Architecture
 * Nodemon
 * Fast-Glob
 
-> ## Features of Tests
+> ## Test Features
 * Unit Tests
 * Integration Tests
 * Coverage Tests
