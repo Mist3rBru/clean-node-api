@@ -7,7 +7,7 @@ describe('Middleware', () => {
     app = require('../config/app')
   })
 
-  test('Should disable x-powered-by header', async () => {
+  it('Should disable x-powered-by header', async () => {
     app.get('/test/x_powered_by', (req, res) => {
       res.send('')
     })
@@ -16,7 +16,7 @@ describe('Middleware', () => {
     expect(res.headers['x-powered-by']).toBeUndefined()
   })
 
-  test('Should return json content-type as default', async () => {
+  it('Should return json content-type as default', async () => {
     app.get('/test/content_type', (req, res) => {
       res.send('')
     })
@@ -26,7 +26,7 @@ describe('Middleware', () => {
       .expect('content-type', /json/)
   })
 
-  test('Should return xml content-type if forced', async () => {
+  it('Should return xml content-type if forced', async () => {
     app.get('/test/content_type', (req, res) => {
       res.type('xml')
       res.send('')
@@ -37,7 +37,7 @@ describe('Middleware', () => {
       .expect('content-type', /xml/)
   })
 
-  test('Should enable CORS', async () => {
+  it('Should enable CORS', async () => {
     app.get('/test/cors', (req, res) => {
       res.send('')
     })
@@ -48,7 +48,7 @@ describe('Middleware', () => {
     expect(res.headers['access-control-allow-headers']).toBe('*')
   })
 
-  test('Should parse body as JSON', async () => {
+  it('Should parse body as JSON', async () => {
     app.post('/test/json_parser', (req, res) => {
       res.send(req.body)
     })
