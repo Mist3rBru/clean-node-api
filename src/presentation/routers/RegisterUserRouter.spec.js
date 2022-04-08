@@ -1,7 +1,6 @@
 const {
 	MissingParamError,
 	InvalidParamError,
-	ServerError,
 } = require('../../utils/errors')
 const RegisterUserRouter = require('./RegisterUserRouter')
 
@@ -163,7 +162,6 @@ describe('RegisterUserRouter', () => {
         password: 'any_password',
       })
       const HttpResponse = await sut.route(HttpRequest)
-      expect(HttpResponse.body.error).toBe(new ServerError().message)
       expect(HttpResponse.status).toBe(500)
     }
   })
@@ -186,7 +184,6 @@ describe('RegisterUserRouter', () => {
         password: 'any_password',
       })
       const HttpResponse = await sut.route(HttpRequest)
-      expect(HttpResponse.body.error).toBe(new ServerError().message)
       expect(HttpResponse.status).toBe(500)
     }
   })
@@ -194,7 +191,6 @@ describe('RegisterUserRouter', () => {
   it('should return 500 if no HttpRequest is provided', async () => {
     const { sut } = makeSut()
     const HttpResponse = await sut.route()
-    expect(HttpResponse.body.error).toBe(new ServerError().message)
     expect(HttpResponse.status).toBe(500)
   })
 })

@@ -1,3 +1,4 @@
+const FindUserByEmailRepository = require('../../infra/repositories/FindUserByEmailRepository')
 const RegisterUserRepository = require('../../infra/repositories/RegisterUserRepository')
 const EncrypterGenerator = require('../../utils/helpers/EncrypterGenerator')
 const RegisterUserUseCase = require('../../domain/RegisterUserUseCase')
@@ -6,11 +7,13 @@ const RegisterUserRouter = require('../../presentation/routers/RegisterUserRoute
 
 module.exports = class RegisterUserComposer {
   static compose() {
+    const findUserByEmailRepository = new FindUserByEmailRepository()
     const registerUserRepository = new RegisterUserRepository()
     const encrypterGenerator = new EncrypterGenerator()
     const registerUserUseCase = new RegisterUserUseCase({
       encrypterGenerator,
       registerUserRepository,
+      findUserByEmailRepository,
     })
     const emailValidator = new EmailValidator()
     

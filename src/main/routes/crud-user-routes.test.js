@@ -8,6 +8,7 @@ describe('CRUD User Routes', () => {
   beforeAll( async() =>{
     await MongoHelper.connect(env.MONGO_URL)
     model = await MongoHelper.getCollection('users')
+    await model.deleteMany()
   })
 
   afterAll( async() => {
@@ -22,7 +23,7 @@ describe('CRUD User Routes', () => {
       password: 'any-password',
     }
     const res = await request(app).post('/api/user').send(user)
-    const data = await model.findOne({ email: 'any-email@example.com'})
+    const data = await model.findOne({ email: user.email })
     expect(res.status).toBe(200)
     expect(data.email).toBe(user.email)
     expect(data.password).toBeUndefined()
