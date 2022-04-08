@@ -22,8 +22,8 @@ module.exports = class RegisterUserRouter {
 			if (!password) {
 				return HttpResponse.badRequest(new MissingParamError('password'))
 			}
-			const user = await this.registerUserUseCase.register(HttpRequest.body)
-			return HttpResponse.ok(user)
+			const accessToken = await this.registerUserUseCase.register(HttpRequest.body)
+			return HttpResponse.ok({ accessToken })
 		} catch (error) {
 			return HttpResponse.serverError(error)
 		}

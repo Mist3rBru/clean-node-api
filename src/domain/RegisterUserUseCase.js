@@ -1,10 +1,11 @@
 const { MissingParamError, InvalidParamError } = require('../utils/errors')
 
 module.exports = class RegisterUseCase {
-  constructor({ encrypterGenerator, registerUserRepository, findUserByEmailRepository } = {}) {
+  constructor({ encrypterGenerator, registerUserRepository, findUserByEmailRepository, tokenGenerator } = {}) {
     this.encrypterGenerator = encrypterGenerator
     this.registerUserRepository = registerUserRepository
     this.findUserByEmailRepository = findUserByEmailRepository
+    this.tokenGenerator = tokenGenerator
   }
 
   async register (body) {
@@ -17,6 +18,7 @@ module.exports = class RegisterUseCase {
     const { password, ...data } = body
     data.password_hash = await this.encrypterGenerator.generate(password)
     const user = await this.registerUserRepository.register(data)
-    return user
+    const accessToken = await this.tokenGenerator.generate(user._id)
+    return accessToken
   }
 }
