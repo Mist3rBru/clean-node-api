@@ -25,7 +25,6 @@ module.exports = class RegisterUserRouter {
 			const user = await this.registerUserUseCase.register(HttpRequest.body)
 			return HttpResponse.ok(user)
 		} catch (error) {
-			console.error(error)
 			return HttpResponse.serverError(error)
 		}
 	}
